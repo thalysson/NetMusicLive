@@ -29,12 +29,12 @@
 				<h:form>
 					<h:panelGrid columns="3" id="form">
 						<h6 id="textLogin">Login:</h6>
-						<p:inputText id="inputLogin" />
+						<p:inputText id="inputLogin" value="#{user.login}"/>
 
-						<p:commandButton id="botaoLogin" style="margin-left: 20px"
+						<p:commandButton id="botaoLogin" action="homepage" style="margin-left: 20px"
 							value="Login" />
 						<h5 id="textSenha">Senha:</h5>
-						<p:password></p:password>
+						<p:password value="#{user.password}"></p:password>
 
 					</h:panelGrid>
 				</h:form>
@@ -58,14 +58,19 @@
 					<h2 class="textForm">Crie uma nova conta.</h2>
 					<h4>Informe os seguintes dados:</h4>
 					<h:panelGrid columns="2">
+					
 						<h6 id="textRegisterLogin">Login:</h6>
-						<p:inputText />
+						<p:inputText value="#{register.login}"/>
+					
 						<h6 id="textRegisterNome">Nome:</h6>
-						<p:inputText />
+						<p:inputText value="#{register.nome}"/>
+					
 						<h6 id="textRegisterEmail">E-mail:</h6>
-						<p:inputText />
+						<p:inputText value="#{register.email}"/>
+					
 						<h6 id="textRegisterSenha">Senha:</h6>
-						<p:password></p:password>
+						<p:password value="#{register.senha}"></p:password>
+					
 						<br></br>
 						<p:button value="Cadastre-se"  style="margin-left: 70px"></p:button>
 					</h:panelGrid>

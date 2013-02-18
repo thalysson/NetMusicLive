@@ -11,10 +11,9 @@ public class TesteUserStories {
 
 		List<String> files = new ArrayList<String>();
 		
-		// Put the us1.txt file into the "test scripts" list
 		files.add("/home/thalysson/workspace/ProjetoSI1/src/testesDeAceitacao_SI1-master/scripts/US01.txt");
+		files.add("/home/thalysson/workspace/ProjetoSI1/src/testesDeAceitacao_SI1-master/scripts/US02.txt");
 
-		// Instantiate the Monopoly Game façade
 		Sistema testeDoSistema = new Sistema();
 
 		// Instantiate EasyAccept facade

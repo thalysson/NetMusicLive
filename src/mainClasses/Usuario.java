@@ -1,23 +1,18 @@
 package mainClasses;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
 
-	private String login, senha, nome, email;
-	private List<String> perfilMusical;
+	private String id,login, senha, nome, email;
+	private List<String> fontesDeSom;
 	
 	public Usuario(String login, String senha, String nome, String email) {
 		setLogin(login);
 		setSenha(senha);
 		setNome(nome);
 		setEmail(email);
-		this.perfilMusical = new ArrayList<String>();
-	}
-
-	public List<String> getPerfilMusical() {
-		return this.perfilMusical;
+		setId(login);
 	}
 
 	
@@ -51,5 +46,13 @@ public class Usuario {
 
 	private void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	private void setId(String login) {
+		this.id = "ID"+login;
 	}
 }

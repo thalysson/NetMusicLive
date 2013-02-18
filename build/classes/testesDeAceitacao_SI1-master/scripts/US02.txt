@@ -39,7 +39,7 @@ som3ID=postarSom idSessao=${sessaoSteve} link="http://www.youtube.com/watch?v=3K
 som4ID=postarSom idSessao=${sessaoSteve} link="https://www.youtube.com/watch?v=JRfuAukYTKg" dataCriacao="31/12/2015"
 som5ID=postarSom idSessao=${sessaoSteve} link="http://www.youtube.com/watch?v=PVzljDmoPVs" dataCriacao="04/02/2016"
 
-expect {${som1ID},${som2ID}} idSessao=${sessaoMark} getPerfilMusical
+expect {${som1ID},${som2ID}} getPerfilMusical idSessao=${sessaoMark}
 expect {${som3ID},${som4ID},${som5ID}} getPerfilMusical idSessao=${sessaoSteve} 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------

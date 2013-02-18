@@ -29,11 +29,11 @@
 				<h:form>
 					<h:panelGrid columns="3" id="form">
 						<h6 id="textLogin" >Login:</h6>
-						<p:inputText id="inputLogin" />
+						<p:inputText id="inputLogin" value="#{user.login}"/>
 						
-						<p:commandButton id="botaoLogin" style="margin-left: 20px" value="Login" />
+						<p:commandButton id="botaoLogin" action="homepage" style="margin-left: 20px" value="Login" />
 						<h5 id="textSenha">Senha:</h5>
-						<p:password></p:password>
+						<p:password value="#{user.password}"></p:password>
 						
 					</h:panelGrid>					
 				</h:form>
@@ -80,7 +80,7 @@
 					<p>É novo aqui? não fique de fora.</p>
 				</blockquote>
 
-				<cite><p:button value="Cadastre-se" href="http://localhost:8080/ProjetoSI1/register.jsf"></p:button></cite>
+				<cite><p:commandButton value="Cadastre-se" action="register"></p:commandButton></cite>
 				<div class="arrow"></div>
 
 			</div>
