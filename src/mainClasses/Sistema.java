@@ -8,11 +8,13 @@ public class Sistema {
 	private GerenciaSons gerenciaSons;
 	private GerenciaSessao gerenciaSessao;
 	private GerenciaUsuarios gerenciaUsuarios;
+	private GerenciaAmizades gerenciaAmizades;
 
 	public void zerarSistema() {
 		this.gerenciaSons = new GerenciaSons();
 		this.gerenciaSessao = new GerenciaSessao();
 		this.gerenciaUsuarios = new GerenciaUsuarios();
+		this.gerenciaAmizades = new GerenciaAmizades();
 	}
 
 	public void criarUsuario(String login, String senha, String nome,String email) throws Exception {
@@ -123,7 +125,8 @@ public class Sistema {
 		}else if(!elementIsValid(login)){
 			throw new Exception("Login inválido");
 		}
-		return "";
+		String solicitante = this.gerenciaSessao.getLogin(sessao);
+		return this.gerenciaAmizades.enviarSolicitacaoAmizade(solicitante, login);
 	}
 	
 	public void aceitarSolicitacaoAmizade(String sessao, String idsolicitacao) throws Exception{
