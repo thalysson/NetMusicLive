@@ -31,20 +31,8 @@ public class GerenciaSons {
 		return id;
 	}
 
-	public String getPerfilMusical(String loginUser) {
-		String retorno = "{";
-		try {
-			List<String> listaIDsSons = mapaLoginIDSons.get(loginUser);
-			int sizeList = listaIDsSons.size();
-			for(int i=0;i<sizeList;i++){
-				retorno = retorno + listaIDsSons.get(i);
-				if(i < (sizeList-1)){
-					retorno = retorno + ",";
-				}
-			}
-		} catch (Exception e) {}
-		retorno = retorno +"}";
-		return retorno;
+	public List<String> getPerfilMusical(String loginUser) {
+			return mapaLoginIDSons.get(loginUser);
 	}
 
 	public String getAtributoSom(String idSom, String atributo) {
@@ -58,4 +46,35 @@ public class GerenciaSons {
 		}
 		return "";
 	}
+	
+	public void adcionaFonteDeSons(Usuario user01, Usuario user02){
+		user01.addFontesDeSom(user02.getId());
+		user02.addFontesDeSom(user01.getId());
+		addVisaoDosSons(user01,user02);
+	}
+
+	private void addVisaoDosSons(Usuario user01, Usuario user02){
+		List<String> perfilMusicalUser01 = getPerfilMusical(user01.getLogin());
+		List<String> perfilMusicalUser02 = getPerfilMusical(user02.getLogin());
+
+		if(perfilMusicalUser01 != null){
+			auxiliaAddSonsVisao(user02,perfilMusicalUser01);
+		}
+		if(perfilMusicalUser02 != null){
+			auxiliaAddSonsVisao(user01,perfilMusicalUser02);
+		}
+		
+	}
+	
+	public void auxiliaAddSonsVisao(Usuario user, List<String> perfilMusical){
+		int sizeList = perfilMusical.size();
+		for(int i=0; i<sizeList; i++){
+			user.addEmVisaoDosSons(perfilMusical.get(i));
+		}
+	}
+	
+	public List<String> getVisaoDosSons(Usuario user) {
+		return user.getVisaoDosSons();
+	}
+	
 }

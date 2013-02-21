@@ -29,11 +29,11 @@
 				<h:form>
 					<h:panelGrid columns="3" id="form">
 						<h6 id="textLogin" >Login:</h6>
-						<p:inputText id="inputLogin" value="#{user.login}"/>
-						
-						<p:commandButton id="botaoLogin" action="homepage" style="margin-left: 20px" value="Login" />
+						<p:inputText id="inputLogin" value="#{user.login}" required="true" requiredMessage="Digite seu login."/>
+						<p:message for="inputLogin" display="erro"/>
 						<h5 id="textSenha">Senha:</h5>
 						<p:password value="#{user.password}"></p:password>
+						<p:commandButton id="botaoLogin" action="homepage" style="margin-left: 20px" value="Login" />
 						
 					</h:panelGrid>					
 				</h:form>
@@ -62,12 +62,12 @@
 
 					<li id="second">
 						<h3>Adcione</h3>
-						<p>Encontre amigos, conheça seus sons.</p>
+						<p>Conheça pessoas com diversos gostos musicais, adcione e conheça seus sons.</p>
 					</li>
 
 					<li id="third">
 						<h3>Compartilhe</h3>
-						<p>Envie sons, receba sons de seus amigos</p>
+						<p>Envie e receba sons de seus amigos.</p>
 					</li>
 				</ul>
 

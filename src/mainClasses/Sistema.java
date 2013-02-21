@@ -46,7 +46,19 @@ public class Sistema {
 
 	public String getPerfilMusical(String sessao) {
 		String loginDaSessao = this.gerenciaSessao.getLogin(sessao);
-		return this.gerenciaSons.getPerfilMusical(loginDaSessao);
+		String retorno = "{";
+		try {
+			List<String> listaIDsSons = this.gerenciaSons.getPerfilMusical(loginDaSessao);
+			int sizeList = listaIDsSons.size();
+			for(int i=0;i<sizeList;i++){
+				retorno = retorno + listaIDsSons.get(i);
+				if(i < (sizeList-1)){
+					retorno = retorno + ",";
+				}
+			}
+		} catch (Exception e) {}
+		retorno = retorno +"}";
+		return retorno;
 	}
 	
 	public boolean dataIsValida(String dataParam){
@@ -125,8 +137,10 @@ public class Sistema {
 		}else if(!elementIsValid(login)){
 			throw new Exception("Login inválido");
 		}
-		String solicitante = this.gerenciaSessao.getLogin(sessao);
-		return this.gerenciaAmizades.enviarSolicitacaoAmizade(solicitante, login);
+		String loginSolicitante = this.gerenciaSessao.getLogin(sessao);
+		Usuario solicitante = this.gerenciaUsuarios.getUser(loginSolicitante);
+		Usuario solicitado = this.gerenciaUsuarios.getUser(login);
+		return this.gerenciaAmizades.enviarSolicitacaoAmizade(solicitante, solicitado);
 	}
 	
 	public void aceitarSolicitacaoAmizade(String sessao, String idsolicitacao) throws Exception{
@@ -134,17 +148,44 @@ public class Sistema {
 			throw new Exception("Sessão inválida");
 		}else if(!elementIsValid(idsolicitacao)){
 			throw new Exception("Solicitação inválida");
+		} else{
+			String loginSolicitado = this.gerenciaSessao.getLogin(sessao);
+			this.gerenciaAmizades.aceitarSolicitacaoAmizade(loginSolicitado, idsolicitacao);
+			
+			Usuario user01 = this.gerenciaUsuarios.getUser(loginSolicitado);
+			Usuario user02 = this.gerenciaAmizades.getSolicitante(idsolicitacao);
+			this.gerenciaSons.adcionaFonteDeSons(user01, user02);
+			this.gerenciaAmizades.removeSolicitacao(idsolicitacao);
 		}
 	}
 	
 	public String getFontesDeSons(String idsessao){
-		return "";
+		String loginUser = this.gerenciaSessao.getLogin(idsessao);
+		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
+		return user.getFontesDeSom();
 	}
 	
 	public String getIDUsuario(String sessao){
 		return this.gerenciaUsuarios.getAtributoUsuario(this.gerenciaSessao.getLogin(sessao),"id");
 	}
 	
+	public String getVisaoDosSons(String idsessao){
+		String loginUser = this.gerenciaSessao.getLogin(idsessao);
+		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
+		String retorno = "{";
+		try {
+			List<String> listaVisaoSons = this.gerenciaSons.getVisaoDosSons(user);
+			int sizeList = listaVisaoSons.size();
+			for(int i=0;i<sizeList;i++){
+				retorno = retorno + listaVisaoSons.get(i);
+				if(i < (sizeList-1)){
+					retorno = retorno + ",";
+				}
+			}
+		} catch (Exception e) {}
+		retorno = retorno +"}";
+		return retorno;
+	}
 	
 	public void encerrarSessao(String login){
 		this.gerenciaSessao.encerrarSessao(login);

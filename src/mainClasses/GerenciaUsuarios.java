@@ -85,8 +85,11 @@ public class GerenciaUsuarios {
 		} return "";
 	}
 	
-	public void enviarSolicitacaoAmizade(){}
-	
+	/**Metodo que retorna um objeto do tipo Usuario a partir de seu login
+	 * 
+	 * @param login String login
+	 * @return Usuario
+	 */
 	public Usuario getUser(String login){
 		int sizeListUsers = this.usuarios.size();
 		for(int i=0;i< sizeListUsers;i++){

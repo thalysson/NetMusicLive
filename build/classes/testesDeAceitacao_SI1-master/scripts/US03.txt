@@ -105,8 +105,8 @@ expectError "Solicitação inexistente" aceitarSolicitacaoAmizade idSessao=${ses
 
 expectError "Som inválido" postarSom idSessao=${sessaoSteve} link= dataCriacao="99/99/9999"
 expectError "Som inválido" postarSom idSessao=${sessaoSteve} link="" dataCriacao="00/00/0000"
-expectError "Som inválido" postarSom idSessao=${sessaoSteve} link="www.youtube.com/watch?v=3KsPIJK17uk" dataCriacao="01/01/2014"
-expectError "Som inválido" postarSom idSessao=${sessaoSteve} link="ftp://www.youtube.com/watch?v=3KsPIJK17uk" dataCriacao="01/01/2014"
+expectError "Som inválido" postarSom idSessao=${sessaoSteve} link="www.youtube.com/watch?v=3KsPIJK17uk" dataCriacao="31/02/2014"
+expectError "Som inválido" postarSom idSessao=${sessaoSteve} link="ftp://www.youtube.com/watch?v=3KsPIJK17uk" dataCriacao="31/02/2014"
 
 #Encerrar a sessao de Mark
 encerrarSessao login="mark"

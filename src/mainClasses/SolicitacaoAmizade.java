@@ -2,13 +2,14 @@ package mainClasses;
 
 public class SolicitacaoAmizade {
 
-	private String idSolicitacao,loginSolicitante,loginSolicitado;
+	private String idSolicitacao;
+	private Usuario solicitante,solicitado;
 	private boolean foiAceita;
 	
-	public SolicitacaoAmizade(String id,String solicitante, String solicitado){
+	public SolicitacaoAmizade(String id,Usuario solicitante, Usuario solicitado){
 		setFoiAceita(false);
-		setLoginSolicitante(solicitante);
-		setLoginSolicitado(solicitado);
+		setSolicitante(solicitante);
+		setSolicitado(solicitado);
 		setIdSolicitacao(id);
 	}
 
@@ -16,7 +17,7 @@ public class SolicitacaoAmizade {
 		return foiAceita;
 	}
 
-	private void setFoiAceita(boolean foiAceita) {
+	public void setFoiAceita(boolean foiAceita) {
 		this.foiAceita = foiAceita;
 	}
 
@@ -28,19 +29,19 @@ public class SolicitacaoAmizade {
 		this.idSolicitacao = idSolicitacao;
 	}
 
-	public String getLoginSolicitante() {
-		return loginSolicitante;
+	public Usuario getSolicitante() {
+		return this.solicitante;
 	}
 
-	private void setLoginSolicitante(String loginSolicitante) {
-		this.loginSolicitante = loginSolicitante;
+	private void setSolicitante(Usuario userSolicitante) {
+		this.solicitante = userSolicitante;
 	}
 
-	public String getLoginSolicitado() {
-		return loginSolicitado;
+	public Usuario getSolicitado() {
+		return this.solicitado;
 	}
 
-	private void setLoginSolicitado(String loginSolicitado) {
-		this.loginSolicitado = loginSolicitado;
+	private void setSolicitado(Usuario userSolicitado) {
+		this.solicitado = userSolicitado;
 	}
 }
