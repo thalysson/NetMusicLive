@@ -30,10 +30,10 @@
 					<h:panelGrid columns="3" id="form">
 						<h6 id="textLogin" >Login:</h6>
 						<p:inputText id="inputLogin" value="#{user.login}" required="true" requiredMessage="Digite seu login."/>
-						<p:message for="inputLogin" display="erro"/>
+						<p:commandButton id="botaoLogin" action="homepage" style="margin-left: 20px" value="Login" />
+
 						<h5 id="textSenha">Senha:</h5>
 						<p:password value="#{user.password}"></p:password>
-						<p:commandButton id="botaoLogin" action="homepage" style="margin-left: 20px" value="Login" />
 						
 					</h:panelGrid>					
 				</h:form>
@@ -43,7 +43,7 @@
 				<h1>
 					<a href="index.jsf">NetMusicLive</a>
 				</h1>
-				<img src="images/box-trans.png" alt="Light Box" />
+				<p:graphicImage url="images/logo.png"></p:graphicImage>
 				<p>Projeto da disciplina Sistemas de Informação do curso Ciência da Computação
 				da UFCG.</p>
 			</div>

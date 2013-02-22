@@ -112,10 +112,11 @@ blockquote p {
 }
 
 #container {
-	width: 1002px;
+	width: 1000px;
 	margin: auto;
 	text-align: left;
 	position: relative;
+	padding-top: 0px;
 	background: #f7f5f4 url(../images/containerBG.jpg) repeat-x;
 }
 
@@ -123,7 +124,19 @@ body#subpage #container {
 	background: #f7f5f4 url(../images/containerBG_alt.jpg) repeat-x;
 }
 
-/* THE LOGO */
+#subHeader{
+	text-align: left;
+	left: 10px;
+	position: absolute;
+}
+
+#userPhoto{
+	padding-top: 13px;
+	padding-left: 20px;
+
+}
+
+/* THE LOGO */ 
 #slogan {
 	height: 145px;
 	clear: both;
@@ -133,6 +146,10 @@ body#subpage #container {
 	padding-top: 70px;
 	padding-left: 600px;
 	font-size: 12px;
+}
+#formSearch{
+	padding-top: 20px;
+	padding-left: 600px;
 }
 
 #formLogin #textLogin,#textSenha {
@@ -147,9 +164,9 @@ body#subpage #container {
 
 #slogan h1 {
 	margin: 0 0 0 50px;
-	background: url(../images/logo-trans.png) no-repeat;
+	background: url(../images/logoName.png) no-repeat;
 	width: 231px;
-	height: 67px;
+	height: 70px;
 	position: relative;
 	z-index: 10;
 	text-indent: -9999px;
@@ -165,8 +182,8 @@ body#subpage #container {
 	width: 124px;
 	height: 67px;
 }
-
-#slogan img {
+/* estilo para a logo <p:graphicImage> da pagina.*/
+#slogan img { 
 	position: absolute;
 	top: 70px;
 	left: -40px;
@@ -185,9 +202,10 @@ body#subpage #container {
 	border-left: 1px solid #4f3b33;
 }
 
+
 /* MAIN CONTENT */
 #main {
-	padding: 0 36px 100px 347px;
+	padding: 0 36px 100px 350px;
 	overflow: hidden;
 	border-left: 1px solid white;
 	border-right: 1px solid white;
@@ -213,15 +231,15 @@ body.single #main #primaryContent {
 }
 
 #primaryContent li#first h3 {
-	background: url(../images/whatWeDoHeadings.png) no-repeat 0 0;
+	background: url(../images/imageText.png) no-repeat 0 0;
 }
 
 #primaryContent li#second h3 {
-	background: url(../images/whatWeDoHeadings.png) no-repeat 0 -34px;
+	background: url(../images/imageText.png) no-repeat 0 -34px;
 }
 
 #primaryContent li#third h3 {
-	background: url(../images/whatWeDoHeadings.png) no-repeat 0 -68px;
+	background: url(../images/imageText.png) no-repeat 0 -68px;
 }
 
 #first p,#second p,#third p {

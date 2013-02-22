@@ -21,42 +21,36 @@
 
 <h:body>
 
+	<div id="subHeader">
+		<p:graphicImage url="images/smallLogo.png"></p:graphicImage>
+
+	</div>
+
 	<div id="container">
+		<p:graphicImage url="images/smallLogoName.png"></p:graphicImage>
 
-		<div id="header">
-
-			<div id="subHeader">
-				<p:inputText></p:inputText>
-				<p:button></p:button>
-
-			</div>
-
-		</div>
-
-		<div id="main">
-		
-			<h:form id="form">
-				<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5"
-					columnClasses="label, column">
-
-					<h:outputText value="Advanced" />
-					<p:selectOneListbox id="scroll"
-						value="#{UserBean.selectedPlayer1}" converter="player"
-						var="p" style="height:200px">
-						<f:selectItems value="#{UserBean.players}" var="player"
-							itemLabel="#{player.name}" itemValue="#{player}" />
-
-						<p:column>
-							#<!--   <p:graphicImage value="photoUsers/#{p.photo}" width="40" /> -->
-						</p:column>
-
-						<p:column>
-            			    #{p.name} - #{p.number}
-			            </p:column>
-					</p:selectOneListbox>
+		<div id="formSearch">
+			<h:form>
+				<h:panelGrid columns="2">
+					<p:inputText></p:inputText>
+					<p:commandButton value="Procurar"
+						style="margin-left:10px;font-size:14px">
+					</p:commandButton>
 				</h:panelGrid>
 			</h:form>
+		</div>
 
+		<div id="userPhoto">
+			<p:graphicImage url="images/photo.png"></p:graphicImage>
+		</div>
+
+
+		<div id="main">
+			<p:inputTextarea value="Postagem de Mensagem"></p:inputTextarea>
+			<div>
+				<p:commandButton value="Enviar"></p:commandButton>
+				<p:commandButton value="Apagar"></p:commandButton>
+			</div>
 		</div>
 
 	</div>
