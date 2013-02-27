@@ -2,12 +2,13 @@ package mainClasses;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Usuario {
 
 	private String id, login, senha, nome, email;
-	private List<String> fontesDeSom, visaoDosSons, listaSeguidores;
-
+	private List<String> fontesDeSom, listaSeguidores;
+	private Stack<String> visaoDosSons, perfilMusical;
 	/**
 	 * Construtor da Classe Usuario.
 	 * 
@@ -27,8 +28,9 @@ public class Usuario {
 		setEmail(email);
 		setId(login);
 		this.fontesDeSom = new ArrayList<String>();
-		this.visaoDosSons = new ArrayList<String>();
 		this.listaSeguidores = new ArrayList<String>();
+		this.visaoDosSons = new Stack<String>();
+		this.perfilMusical = new Stack<String>();
 	}
 
 	/**
@@ -150,7 +152,7 @@ public class Usuario {
 	 * 
 	 * @return List<String> visaoDosSons.
 	 */
-	public List<String> getVisaoDosSons() {
+	public Stack<String> getVisaoDosSons() {
 		return this.visaoDosSons;
 	}
 
@@ -158,7 +160,7 @@ public class Usuario {
 	 * Metodo que adciona um som na visao de sons do Usuario
 	 * 
 	 */
-	public void addEmVisaoDosSons(String idSom) {
+	public void addEmVisaoDosSons(String idSom) {	
 		this.visaoDosSons.add(idSom);
 	}
 
@@ -216,5 +218,13 @@ public class Usuario {
 				}
 			}
 		}
+	}
+
+	public void postarSom(String idSom) {
+		this.perfilMusical.add(idSom);
+	}
+	
+	public Stack<String> getPerfilMusical(){
+		return this.perfilMusical;
 	}
 }

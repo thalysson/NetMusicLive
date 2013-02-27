@@ -10,15 +10,16 @@ public class TesteUserStories {
 	public static void main(String[] args) {
 
 		List<String> files = new ArrayList<String>();
-		files.add("/home/thalysson/workspace/ProjetoSI1/src/testesDeAceitacao_SI1-master/scripts/US01.txt");		
-		files.add("/home/thalysson/workspace/ProjetoSI1/src/testesDeAceitacao_SI1-master/scripts/US02.txt");
+		//files.add("/home/thalysson/workspace/ProjetoSI1/src/testesDeAceitacao_SI1-master/scripts/US01.txt");		
+		//files.add("/home/thalysson/workspace/ProjetoSI1/src/testesDeAceitacao_SI1-master/scripts/US02.txt");
+		files.add("/home/thalysson/workspace/ProjetoSI1/src/testesDeAceitacao_SI1-master/scripts/US03.txt");
 		
 
 		Sistema testeDoSistema = new Sistema();
 
 		// Instantiate EasyAccept facade
 		EasyAcceptFacade eaFacade = new EasyAcceptFacade(testeDoSistema,files);
-
+		
 		// Execute the tests
 		eaFacade.executeTests();
 

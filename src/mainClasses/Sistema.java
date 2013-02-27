@@ -2,6 +2,7 @@ package mainClasses;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Sistema {
 
@@ -35,7 +36,8 @@ public class Sistema {
 	
 	public String getPerfilMusical(String sessao) {
 		String loginDaSessao = this.gerenciaSessao.getLogin(sessao);
-		return retornaListComChaves(this.gerenciaSons.getPerfilMusical(loginDaSessao));
+		Usuario user = this.gerenciaUsuarios.getUser(loginDaSessao);
+		return retornaListComChaves(this.gerenciaSons.getPerfilMusical(user));
 	}
 	
 	public boolean dataIsValida(String dataParam){
@@ -66,11 +68,14 @@ public class Sistema {
 	}
 	
 	public String postarSom(String sessao,String link,String dataCriacao) throws Exception{
-		if(!elementIsValid(link) || !dataIsValida(dataCriacao)){
+		if(!elementIsValid(link)){
 			throw new Exception("Som inválido");
+		} else if(!dataIsValida(dataCriacao)){
+			throw new Exception("Data de Criação inválida");
 		}
 		String login = this.gerenciaSessao.getLogin(sessao);
-		 return this.gerenciaSons.postarSom(login,link,dataCriacao);
+		Usuario user = this.gerenciaUsuarios.getUser(login);
+		 return this.gerenciaSons.postarSom(user,link,dataCriacao);
 	}
 	
 	public String getAtributoUsuario(String login, String atributo) throws Exception{
@@ -107,11 +112,13 @@ public class Sistema {
 	}
 	
 	public void seguirUsuario (String idsessao,String login) throws Exception{
+		verificaSessao(idsessao);
 		if(!elementIsValid(idsessao)){
 			throw new Exception("Sessão inválida");
-		} else if(!elementIsValid(login) || this.gerenciaSessao.getLogin(idsessao).equals(login)){
+		}else if(!elementIsValid(login) || this.gerenciaSessao.getLogin(idsessao).equals(login)){
 			throw new Exception("Login inválido");
 		}
+		
 		// Identificando Usuario que sera seguido:
 		if(this.gerenciaUsuarios.loginJaExiste(login)){
 			Usuario userSeguido = this.gerenciaUsuarios.getUser(login);
@@ -160,11 +167,11 @@ public class Sistema {
 	public String getVisaoDosSons(String idsessao){
 		String loginUser = this.gerenciaSessao.getLogin(idsessao);
 		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
-		return retornaListComChaves(this.gerenciaSons.getVisaoDosSons(user));
+		return retornaStackComChaves(this.gerenciaSons.getVisaoDosSons(user));
 	}
 	
 	public void encerrarSessao(String login){
-		this.gerenciaSessao.encerrarSessao(login);
+		this.gerenciaSessao.encerrarSessao("sessao"+login);
 	}
 
 	/**
@@ -172,6 +179,22 @@ public class Sistema {
 	 */
 	public void encerrarSistema(){
 		
+	}
+	
+	public String retornaStackComChaves(Stack<String> list){
+		String retorno ="{";
+		try {
+			int sizeList = list.size();
+			for(int i=0;i<sizeList;i++){
+				retorno = retorno + list.pop();
+				
+				if(i < (sizeList-1)){
+					retorno = retorno + ",";
+				}
+			}
+		} catch (Exception e) {}
+		retorno = retorno +"}";
+		return retorno;
 	}
 	
 	public String retornaListComChaves(List<String> list){
@@ -192,7 +215,7 @@ public class Sistema {
 	public void verificaSessao(String idsessao) throws Exception{
 		if(!elementIsValid(idsessao)){
 			throw new Exception("Sessão inválida");
-		} else if(!elementIsValid(this.gerenciaSessao.getLogin(idsessao))){
+		} else if(!this.gerenciaSessao.existeSessao(idsessao)){
 			throw new Exception("Sessão inexistente");
 		}
 	}

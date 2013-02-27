@@ -18,6 +18,7 @@ public class GerenciaSessao {
 	 * @param login
 	 */
 	public void encerrarSessao(String login) {
+		
 		this.sessoes.remove(login);
 	}
 
@@ -40,5 +41,9 @@ public class GerenciaSessao {
 	 */
 	public String getLogin(String idsessao) {
 		return this.sessoes.get(idsessao);
+	}
+	
+	public boolean existeSessao(String idsessao){
+		return this.sessoes.containsKey(idsessao);
 	}
 }

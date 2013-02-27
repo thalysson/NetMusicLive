@@ -4,37 +4,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class GerenciaSons {
 
-	private Map<String, List<String>> mapaLoginIDSons;
 	private List<Som> listaDeSons;
 	
 	/**
 	 * Construtor da classe.
 	 */
 	public GerenciaSons() {
-		this.mapaLoginIDSons = new HashMap<String, List<String>>();
 		this.listaDeSons = new ArrayList<Som>();
 	}
 
 
-	public String postarSom(String login, String link, String dataCriacao) {
+	public String postarSom(Usuario user, String link, String dataCriacao) {
 		String id = "som" + (this.listaDeSons.size() + 1) + "ID";
 		Som som = new Som(id, link, dataCriacao);
 		this.listaDeSons.add(som);
-		if(mapaLoginIDSons.containsKey(login)){
-			mapaLoginIDSons.get(login).add(som.getId());
-		}else{
-			List<String> novaLista = new ArrayList<String>();
-			novaLista.add(som.getId());
-			mapaLoginIDSons.put(login, novaLista);
-		}
+		user.postarSom(id);
 		return id;
 	}
 
-	public List<String> getPerfilMusical(String loginUser) {
-			return mapaLoginIDSons.get(loginUser);
+	public Stack<String> getPerfilMusical(Usuario user) {
+		return user.getPerfilMusical();
 	}
 
 	public String getAtributoSom(String idSom, String atributo) {
@@ -52,20 +45,16 @@ public class GerenciaSons {
 	public void seguirUsuario(Usuario userSeguidor, Usuario userSeguido) throws Exception{
 		userSeguidor.addFontesDeSom(userSeguido.getId());
 		userSeguido.addListaDeSeguidores(userSeguidor.getId());
-		
+		addVisaoDosSons(userSeguidor, userSeguido);
 	}
 
-	private void addVisaoDosSons(Usuario user01, Usuario user02){
-		List<String> perfilMusicalUser01 = getPerfilMusical(user01.getLogin());
-		List<String> perfilMusicalUser02 = getPerfilMusical(user02.getLogin());
+	private void addVisaoDosSons(Usuario seguidor, Usuario seguido){
+		List<String> perfilMusicalUserSeguido = getPerfilMusical(seguido);
 
-		if(perfilMusicalUser01 != null){
-			auxiliaAddSonsVisao(user02,perfilMusicalUser01);
+		if(perfilMusicalUserSeguido != null){
+			auxiliaAddSonsVisao(seguidor,perfilMusicalUserSeguido);
 		}
-		if(perfilMusicalUser02 != null){
-			auxiliaAddSonsVisao(user01,perfilMusicalUser02);
-		}
-		
+
 	}
 	
 	public void auxiliaAddSonsVisao(Usuario user, List<String> perfilMusical){
@@ -80,7 +69,7 @@ public class GerenciaSons {
 	 * @param user
 	 * @return List<String>
 	 */
-	public List<String> getVisaoDosSons(Usuario user) {
+	public Stack<String> getVisaoDosSons(Usuario user) {
 		return user.getVisaoDosSons();
 	}
 }
