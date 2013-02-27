@@ -10,7 +10,9 @@ public class GerenciaSons {
 	private Map<String, List<String>> mapaLoginIDSons;
 	private List<Som> listaDeSons;
 	
-	
+	/**
+	 * Construtor da classe.
+	 */
 	public GerenciaSons() {
 		this.mapaLoginIDSons = new HashMap<String, List<String>>();
 		this.listaDeSons = new ArrayList<Som>();
@@ -47,10 +49,10 @@ public class GerenciaSons {
 		return "";
 	}
 	
-	public void adcionaFonteDeSons(Usuario user01, Usuario user02){
-		user01.addFontesDeSom(user02.getId());
-		user02.addFontesDeSom(user01.getId());
-		addVisaoDosSons(user01,user02);
+	public void seguirUsuario(Usuario userSeguidor, Usuario userSeguido) throws Exception{
+		userSeguidor.addFontesDeSom(userSeguido.getId());
+		userSeguido.addListaDeSeguidores(userSeguidor.getId());
+		
 	}
 
 	private void addVisaoDosSons(Usuario user01, Usuario user02){
@@ -73,8 +75,12 @@ public class GerenciaSons {
 		}
 	}
 	
+	/** Metodo que retorna a lista de visao de sons de um determinado Usuario.
+	 * 
+	 * @param user
+	 * @return List<String>
+	 */
 	public List<String> getVisaoDosSons(Usuario user) {
 		return user.getVisaoDosSons();
 	}
-	
 }

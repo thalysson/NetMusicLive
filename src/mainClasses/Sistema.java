@@ -8,13 +8,11 @@ public class Sistema {
 	private GerenciaSons gerenciaSons;
 	private GerenciaSessao gerenciaSessao;
 	private GerenciaUsuarios gerenciaUsuarios;
-	private GerenciaAmizades gerenciaAmizades;
 
 	public void zerarSistema() {
 		this.gerenciaSons = new GerenciaSons();
 		this.gerenciaSessao = new GerenciaSessao();
 		this.gerenciaUsuarios = new GerenciaUsuarios();
-		this.gerenciaAmizades = new GerenciaAmizades();
 	}
 
 	public void criarUsuario(String login, String senha, String nome,String email) throws Exception {
@@ -35,30 +33,9 @@ public class Sistema {
 		}
 	}
 	
-	public static boolean elementIsValid(String element){
-		if(element == null || element.isEmpty()){ 
-			return false;
-		}
-		return true;
-	}
-	
-	
-
 	public String getPerfilMusical(String sessao) {
 		String loginDaSessao = this.gerenciaSessao.getLogin(sessao);
-		String retorno = "{";
-		try {
-			List<String> listaIDsSons = this.gerenciaSons.getPerfilMusical(loginDaSessao);
-			int sizeList = listaIDsSons.size();
-			for(int i=0;i<sizeList;i++){
-				retorno = retorno + listaIDsSons.get(i);
-				if(i < (sizeList-1)){
-					retorno = retorno + ",";
-				}
-			}
-		} catch (Exception e) {}
-		retorno = retorno +"}";
-		return retorno;
+		return retornaListComChaves(this.gerenciaSons.getPerfilMusical(loginDaSessao));
 	}
 	
 	public boolean dataIsValida(String dataParam){
@@ -89,10 +66,8 @@ public class Sistema {
 	}
 	
 	public String postarSom(String sessao,String link,String dataCriacao) throws Exception{
-		if(!elementIsValid(link)){
+		if(!elementIsValid(link) || !dataIsValida(dataCriacao)){
 			throw new Exception("Som inválido");
-		}else if(!dataIsValida(dataCriacao)){
-			throw new Exception("Data de Criação inválida");
 		}
 		String login = this.gerenciaSessao.getLogin(sessao);
 		 return this.gerenciaSons.postarSom(login,link,dataCriacao);
@@ -131,40 +106,53 @@ public class Sistema {
 		}
 	}
 	
-	public String enviarSolicitacaoAmizade(String sessao,String login) throws Exception{
-		if(!elementIsValid(sessao)){
+	public void seguirUsuario (String idsessao,String login) throws Exception{
+		if(!elementIsValid(idsessao)){
 			throw new Exception("Sessão inválida");
-		}else if(!elementIsValid(login)){
+		} else if(!elementIsValid(login) || this.gerenciaSessao.getLogin(idsessao).equals(login)){
 			throw new Exception("Login inválido");
 		}
-		String loginSolicitante = this.gerenciaSessao.getLogin(sessao);
-		Usuario solicitante = this.gerenciaUsuarios.getUser(loginSolicitante);
-		Usuario solicitado = this.gerenciaUsuarios.getUser(login);
-		return this.gerenciaAmizades.enviarSolicitacaoAmizade(solicitante, solicitado);
-	}
-	
-	public void aceitarSolicitacaoAmizade(String sessao, String idsolicitacao) throws Exception{
-		if(!elementIsValid(sessao)){
-			throw new Exception("Sessão inválida");
-		}else if(!elementIsValid(idsolicitacao)){
-			throw new Exception("Solicitação inválida");
-		} else{
-			String loginSolicitado = this.gerenciaSessao.getLogin(sessao);
-			this.gerenciaAmizades.aceitarSolicitacaoAmizade(loginSolicitado, idsolicitacao);
-			
-			Usuario user01 = this.gerenciaUsuarios.getUser(loginSolicitado);
-			Usuario user02 = this.gerenciaAmizades.getSolicitante(idsolicitacao);
-			this.gerenciaSons.adcionaFonteDeSons(user01, user02);
-			this.gerenciaAmizades.removeSolicitacao(idsolicitacao);
+		// Identificando Usuario que sera seguido:
+		if(this.gerenciaUsuarios.loginJaExiste(login)){
+			Usuario userSeguido = this.gerenciaUsuarios.getUser(login);
+			// Identificando Usuario que decidiu ser seguidor:
+			String loginSeguidor = this.gerenciaSessao.getLogin(idsessao);
+			Usuario userSeguidor = this.gerenciaUsuarios.getUser(loginSeguidor);
+			// Passando para a classe que gerencia o sons a responsabilidade de adcionar nas fontes de som, e na lista de seguidores.
+			this.gerenciaSons.seguirUsuario(userSeguidor, userSeguido);
+		}else{
+			throw new Exception("Login inexistente");
 		}
 	}
 	
-	public String getFontesDeSons(String idsessao){
+	public String getListaDeSeguidores(String idsessao) throws Exception{
+		verificaSessao(idsessao);
+		// Identificando Usuario:
 		String loginUser = this.gerenciaSessao.getLogin(idsessao);
 		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
-		return user.getFontesDeSom();
+		return retornaListComChaves(user.getListaDeSeguidores());
 	}
 	
+	public int getNumeroDeSeguidores (String idsessao) throws Exception{
+		verificaSessao(idsessao);
+		String loginUser = this.gerenciaSessao.getLogin(idsessao);
+		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
+		return user.getNumeroDeSeguidores();
+	}
+	
+	public String getFontesDeSons(String idsessao) throws Exception{
+		verificaSessao(idsessao);
+		String loginUser = this.gerenciaSessao.getLogin(idsessao);
+		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
+		return retornaListComChaves(user.getFontesDeSom());
+	}
+	
+	
+	/** Metodo que retorna o id de uma determinado usuario a partir do identificador de uma sessao.
+	 * 
+	 * @param sessao
+	 * @return
+	 */
 	public String getIDUsuario(String sessao){
 		return this.gerenciaUsuarios.getAtributoUsuario(this.gerenciaSessao.getLogin(sessao),"id");
 	}
@@ -172,12 +160,26 @@ public class Sistema {
 	public String getVisaoDosSons(String idsessao){
 		String loginUser = this.gerenciaSessao.getLogin(idsessao);
 		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
-		String retorno = "{";
+		return retornaListComChaves(this.gerenciaSons.getVisaoDosSons(user));
+	}
+	
+	public void encerrarSessao(String login){
+		this.gerenciaSessao.encerrarSessao(login);
+	}
+
+	/**
+	 * Metodo que ao ser chamado finaliza o sistema.
+	 */
+	public void encerrarSistema(){
+		
+	}
+	
+	public String retornaListComChaves(List<String> list){
+		String retorno ="{";
 		try {
-			List<String> listaVisaoSons = this.gerenciaSons.getVisaoDosSons(user);
-			int sizeList = listaVisaoSons.size();
+			int sizeList = list.size();
 			for(int i=0;i<sizeList;i++){
-				retorno = retorno + listaVisaoSons.get(i);
+				retorno = retorno + list.get(i);
 				if(i < (sizeList-1)){
 					retorno = retorno + ",";
 				}
@@ -187,11 +189,22 @@ public class Sistema {
 		return retorno;
 	}
 	
-	public void encerrarSessao(String login){
-		this.gerenciaSessao.encerrarSessao(login);
+	public void verificaSessao(String idsessao) throws Exception{
+		if(!elementIsValid(idsessao)){
+			throw new Exception("Sessão inválida");
+		} else if(!elementIsValid(this.gerenciaSessao.getLogin(idsessao))){
+			throw new Exception("Sessão inexistente");
+		}
 	}
 
-	public void encerrarSistema(){
-		
+	/** Metodo que auxilia na verificação de variaveis na forma de String.
+	 * 
+	 * @param  String element
+	 * @return true se elemento nao for null ou vazio, false caso contrario.
+	 */
+	public static boolean elementIsValid(String element){
+		if(element == null || element.isEmpty()){ 
+			return false;
+		}return true;
 	}
 }

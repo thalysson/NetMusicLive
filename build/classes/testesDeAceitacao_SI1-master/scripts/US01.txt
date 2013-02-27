@@ -6,7 +6,8 @@
 # usuário, ainda que aponte para vídeos com a
 # mesma música ou mesmo sons com a mesma url,
 # a data de criação faz delas postagens distintas.
-#    Os sons são armazenados no perfil na ordem cronológica de criação.
+#    Os sons são armazenados no perfil musical na
+# ordem cronológica de criação.
 
 # limpar os dados do sistema
 zerarSistema

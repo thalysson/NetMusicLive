@@ -33,7 +33,7 @@
 			<h:form>
 				<h:panelGrid columns="2">
 					<p:inputText></p:inputText>
-					<p:commandButton value="Procurar"
+					<p:commandButton value="Search"
 						style="margin-left:10px;font-size:14px">
 					</p:commandButton>
 				</h:panelGrid>
@@ -41,17 +41,33 @@
 		</div>
 
 		<div id="userPhoto">
-			<p:graphicImage url="images/photo.png"></p:graphicImage>
+			<p:graphicImage url="images/users/default.png"></p:graphicImage>
 		</div>
 
-
+		<div>
+			<p:inputTextarea value="Postagem de Mensagem" cols="50" style="margin-left: 50px;margin-top: 30px;magin-bottom:5px;;"></p:inputTextarea>
+		</div>
 		<div id="main">
-			<p:inputTextarea value="Postagem de Mensagem"></p:inputTextarea>
+
 			<div>
 				<p:commandButton value="Enviar"></p:commandButton>
-				<p:commandButton value="Apagar"></p:commandButton>
+				<p:commandButton value="Apagar" style="margin-left:20px;"></p:commandButton>
 			</div>
 		</div>
+
+		<h:panelGrid columns="10" cellpadding="5"
+			columnClasses="label, column">
+			<h:outputText value="Friend List" />
+			<p:selectOneListbox id="scroll" value="#{UserBean.friend}"
+				var="friend" style="height:200px">
+				<f:selectItems value="#{UserBean.friends}" />
+				<p:column>
+					<p:graphicImage value="/images/users/#{friend.getNome()}"
+						width="40" />
+				</p:column>
+			</p:selectOneListbox>
+		</h:panelGrid>
+
 
 	</div>
 
