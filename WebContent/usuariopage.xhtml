@@ -32,9 +32,9 @@
 			<h:form>
 
 				<h:panelGrid columns="3">
-					<p:inputText id="searchText" value="#{homeBean.textSearch}"/>
-					<p:commandButton value="Pesquisar" action="#{homeBean.search}" ajax="false"
-						style="margin-left:10px;font-size:13px" />
+					<p:inputText id="searchText" value="#{homeBean.textSearch}" />
+					<p:commandButton value="Pesquisar" action="#{homeBean.search}"
+						ajax="false" style="margin-left:10px;font-size:13px" />
 				</h:panelGrid>
 			</h:form>
 		</div>
@@ -46,47 +46,9 @@
 			</h:panelGrid>
 		</div>
 
-		<h:form>
-			<p:inputTextarea value="#{homeBean.mensagemDePostagem}" cols="50"
-				rows="2" style="margin-top: 30px;margin-left:150px;" />
-
-			<div id="formPostagemMusica" style="margin-top: 5px;">
-				<p:commandButton value="Enviar" ajax="false"
-					action="#{homeBean.postarSom}"
-					style="margin-left:500px;font-size:14px" />
-
-				<p:commandButton value="Apagar" ajax="false"
-					action="#{homeBean.apagarMensagemDePostagem}"
-					style="margin-left:10px;font-size:14px" />
-			</div>
-		</h:form>
 
 
-		<div id="feeds">
-			<h2>Feed Usuario</h2>
-			<p:dataTable id="MainFeed" var="som" value="#{homeBean.mainFeed}"
-				emptyMessage="Nenhum som">
-				<p:column>
-					<p:commandLink value="#{som.link}" />
-				</p:column>
-				<p:column>
-					#{som.data}
-				</p:column>
-
-			</p:dataTable>
-
-			<h2>Friend List</h2>
-			<p:dataTable id="FriendList" var="friend"
-				value="#{homeBean.fontesDeSom}" style="padding-bottom:50px;"
-				emptyMessage="Nenhum Usuario Seguido.">
-				<p:column>
-			#{friend}
-			</p:column>
-			</p:dataTable>
 		</div>
-
-	</div>
-
 
 	<div id="footerWrap">
 

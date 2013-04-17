@@ -243,4 +243,13 @@ public class Sistema implements Serializable {
 	public void encerrarSistema() {
 
 	}
+
+	public List<Usuario> search(String textSearch) {
+		return this.gerenciador.search(textSearch);
+	}
+
+	public List<Som> perfilMusicalUserSelected(String nameUserSelected) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

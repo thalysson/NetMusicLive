@@ -77,5 +77,14 @@ public class InterfaceWebAdapter{
 		}catch(Exception e){}
 		
 		return nomeUsuarios;
+	}
+
+	public List<Usuario> search(String textSearch) {
+		return this.netMusicLive.search(textSearch);
+	}
+
+	public List<Som> perfilMusicalUserSelected(String nameUserSelected) {
+		return this.netMusicLive.perfilMusicalUserSelected(nameUserSelected);
+		
 	}	
 }

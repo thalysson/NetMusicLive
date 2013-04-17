@@ -1,10 +1,8 @@
-# User Story 02 - Seguindo alguem, visualizando fonte de sons e lista de seguidores
-
-#    Usuario pode seguir outro usuário cadastrado, 
-# e este ultimo entra na fonte de sons do primeiro. 
-#    A ordem em que os usuarios aparecem na fonte de sons deve obedecer a
-# ordem de chegada como em uma fila comum.
-#    A ordem da lista de seguidores deve ser alfabetica.
+# User Story 09 - Persistencia de informacoes
+#   
+#    O sistema eh encerrado e reiniciado
+#    A persistencia das informacoes eh checada
+#
 
 # limpar os dados do sistema
 zerarSistema
@@ -116,39 +114,7 @@ expect 0 getNumeroDeSeguidores idSessao=${sessaoBill}
 expect 1 getNumeroDeSeguidores idSessao=${sessaoSteve}
 expect 2 getNumeroDeSeguidores idSessao=${sessaoMark}
 
-# ------------------------------------------------------------------------------------------------------------------------------------------------
-
-#Encerrar a sessao de Bill
-encerrarSessao login="bill"
-
-# -----------------------------------------------------------------------------------------------------------------------------------------------
-
-# entradas inválidas
-
-expectError "Sessão inválida" seguirUsuario idSessao= login="steve"
-expectError "Sessão inválida" seguirUsuario idSessao="" login="steve"
-expectError "Sessão inexistente" seguirUsuario idSessao=${sessaoBill} login="steve"
-expectError "Login inválido" seguirUsuario idSessao=${sessaoSteve} login=
-expectError "Login inválido" seguirUsuario idSessao=${sessaoSteve} login=""
-expectError "Login inválido" seguirUsuario idSessao=${sessaoSteve} login="steve"
-expectError "Login inexistente" seguirUsuario idSessao=${sessaoSteve} login="xpto"
-
-expectError "Som inválido" postarSom idSessao=${sessaoSteve} link= dataCriacao="99/99/9999"
-expectError "Som inválido" postarSom idSessao=${sessaoSteve} link="" dataCriacao="00/00/0000"
-expectError "Data de Criação inválida" postarSom idSessao=${sessaoSteve} link="www.youtube.com/watch?v=3KsPIJK17uk" dataCriacao="31/02/2014"
-expectError "Data de Criação inválida" postarSom idSessao=${sessaoSteve} link="ftp://www.youtube.com/watch?v=3KsPIJK17uk" dataCriacao="31/02/2014"
-
-expectError "Sessão inválida" getListaDeSeguidores idSessao=
-expectError "Sessão inválida" getListaDeSeguidores idSessao=""
-expectError "Sessão inexistente" getListaDeSeguidores idSessao="xpto"
-
-expectError "Sessão inválida" getNumeroDeSeguidores idSessao=
-expectError "Sessão inválida" getNumeroDeSeguidores idSessao=""
-expectError "Sessão inexistente" getNumeroDeSeguidores idSessao="xpto"
-
-expectError "Sessão inválida" getFontesDeSons idSessao=
-expectError "Sessão inválida" getFontesDeSons idSessao=""
-expectError "Sessão inexistente" getFontesDeSons idSessao=${sessaoBill}
+#----------------------------------------------------------------------------------------------------------------------------------
 
 #Encerrar a sessao de Mark
 encerrarSessao login="mark"
@@ -156,6 +122,46 @@ encerrarSessao login="mark"
 #Encerrar a sessao de Steve
 encerrarSessao login="steve"
 
+#Encerrar a sessao de Bill
+encerrarSessao login="bill"
+
+# sistema eh encerrado
+encerrarSistema
+
+# sistema eh reiniciado
+reiniciarSistema
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+
+# verificacao de informacoes do sistema
+
+# o método 'abrirSessao' retorna o ID da sessão
+sessaoMark=abrirSessao login="mark" senha="m@rk"
+sessaoSteve=abrirSessao login="steve" senha="5t3v3"
+sessaoBill=abrirSessao login="bill" senha="severino"
+
+# listas de seguidores
+expect {} getListaDeSeguidores idSessao=${sessaoBill}
+expect {${IDBill}} getListaDeSeguidores idSessao=${sessaoSteve}
+expect {${IDSteve},${IDBill}} getListaDeSeguidores idSessao=${sessaoMark}
+
+# numero de seguidores
+expect 0 getNumeroDeSeguidores idSessao=${sessaoBill}
+expect 1 getNumeroDeSeguidores idSessao=${sessaoSteve}
+expect 2 getNumeroDeSeguidores idSessao=${sessaoMark}
+
+# fontes de sons
+expect {} getFontesDeSons idSessao=${sessaoMark} 
+expect {${IDSteve},${IDMark}} getFontesDeSons idSessao=${sessaoBill}
+expect {${IDMark}} getFontesDeSons idSessao=${sessaoSteve} 
+
+# perfis
+expect {${som2ID},${som1ID}} getPerfilMusical idSessao=${sessaoMark}
+expect {${som5ID},${som4ID},${som3ID}} getPerfilMusical idSessao=${sessaoSteve}
+expect {} getPerfilMusical idSessao=${sessaoBill}
+
+#---------------------------------------------------------------------------------------------------------------------------------
+
+#Finaliza o sistema
 encerrarSistema
 quit
-

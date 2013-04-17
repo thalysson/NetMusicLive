@@ -319,7 +319,12 @@ public class NetMusicLive implements Serializable {
 	public boolean verificaLoginESenha(String login, String senha) {
 		return sistema.verificaLoginESenha(login, senha);
 	}
-	
-	
 
+	public List<Usuario> search(String textSearch) {
+		return this.sistema.search(textSearch);		
+	}
+
+	public List<Som> perfilMusicalUserSelected(String nameUserSelected) {
+		return this.sistema.perfilMusicalUserSelected(nameUserSelected);
+	}
 }

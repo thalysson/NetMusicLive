@@ -22,7 +22,7 @@ public class GerenciaUsuarioSom {
 	}
 
 	public boolean verificaLoginESenha(String login, String senha) {
-		for (Usuario usuario : usuarios){
+		for (Usuario usuario : usuarios) {
 			if (usuario.getLogin().equals(login)) {
 				if (usuario.getSenha().equals(senha)) {
 					return true;
@@ -32,7 +32,7 @@ public class GerenciaUsuarioSom {
 		return false;
 	}
 
-	public boolean existeEmailUsuario(String email){
+	public boolean existeEmailUsuario(String email) {
 		for (int i = 0; i < usuarios.size(); i++) {
 			if (usuarios.get(i).getEmail().equals(email)) {
 				return true;
@@ -41,7 +41,7 @@ public class GerenciaUsuarioSom {
 		return false;
 	}
 
-	public boolean existeLoginUsuario(String login){
+	public boolean existeLoginUsuario(String login) {
 		for (Usuario usuario : usuarios) {
 			if (usuario.getLogin().equals(login)) {
 				return true;
@@ -78,7 +78,7 @@ public class GerenciaUsuarioSom {
 	public boolean favoritarSom(String login, String idSom) {
 		Usuario usuario = getUsuario(login, "login");
 		Som som = getSom(idSom);
-		if (som == null){
+		if (som == null) {
 			return false;
 		}
 		usuario.addSonsFavoritos(som);
@@ -89,9 +89,9 @@ public class GerenciaUsuarioSom {
 
 	public String getAtributoSom(String idSom, String atributo) {
 		Som som;
-		if (sons.containsKey(idSom)){
+		if (sons.containsKey(idSom)) {
 			som = (Som) sons.get(idSom);
-			if(atributo.equals("dataCriacao")){
+			if (atributo.equals("dataCriacao")) {
 				return som.getData();
 			}
 		}
@@ -113,7 +113,7 @@ public class GerenciaUsuarioSom {
 	}
 
 	public List<Usuario> getFontesSomUsuario(String login) {
-		return  getUsuario(login, "login").getFontesDeSom();
+		return getUsuario(login, "login").getFontesDeSom();
 	}
 
 	public List<Som> getVisaoSonsUsuario(String login) {
@@ -153,12 +153,11 @@ public class GerenciaUsuarioSom {
 	private Som getSom(String idSom) {
 		return (Som) sons.get(idSom);
 	}
-	
 
 	private void addVisaoDosSons(Usuario seguidor, Usuario seguido) {
 		List<Som> perfilMusicalUsuarioSeguido = seguido.getPerfilMusical();
-		if(perfilMusicalUsuarioSeguido != null){
-			for(int i=0; i< perfilMusicalUsuarioSeguido.size(); i++){
+		if (perfilMusicalUsuarioSeguido != null) {
+			for (int i = 0; i < perfilMusicalUsuarioSeguido.size(); i++) {
 				seguidor.addVisaoDosSons(perfilMusicalUsuarioSeguido.get(i));
 			}
 		}
@@ -169,5 +168,17 @@ public class GerenciaUsuarioSom {
 		Som som = new Som(id, link, dataCriacao);
 		sons.put(id, som);
 		return som;
+	}
+
+	public List<Usuario> search(String textSearch) {
+		List<Usuario> result = new ArrayList<Usuario>();
+		int sizeList = usuarios.size();
+		for (int i = 0; i < sizeList; i++) {
+			String nomeUsuario = usuarios.get(i).getNome();
+			if (nomeUsuario.contains(textSearch)) {
+				result.add(usuarios.get(i));
+			}
+		}
+		return result;
 	}
 }

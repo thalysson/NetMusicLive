@@ -1,12 +1,12 @@
 body {
-	background: #eeebe9 url(estilo/images/bg.jpg) repeat-x;
+	background: #eeebe9 url(images/bg.jpg) repeat-x;
 	text-align: center;
 	font-family: helvetica, arial, sans-serif;
 	line-height: 25px;
 }
 
 body#subpage {
-	background: #eeebe9 url(estilo/images/bg_alt.jpg) repeat-x;
+	background: #eeebe9 url(images/bg_alt.jpg) repeat-x;
 }
 
 h1,h2,h3,h4,h5 {
@@ -116,11 +116,11 @@ blockquote p {
 	text-align: left;
 	position: relative;
 	padding-top: 0px;
-	background: #f7f5f4 url(estilo/images/containerBG.jpg) repeat-x;
+	background: #f7f5f4 url(images/containerBG.jpg) repeat-x;
 }
 
 body#subpage #container {
-	background: #f7f5f4 url(estilo/images/containerBG_alt.jpg) repeat-x;
+	background: #f7f5f4 url(images/containerBG_alt.jpg) repeat-x;
 }
 
 #subHeader {
@@ -172,7 +172,7 @@ body#subpage #container {
 
 #slogan h1 {
 	margin: 0 0 0 50px;
-	background: url(estilo/images/logoName.png) no-repeat;
+	background: url(images/logoName.png) no-repeat;
 	width: 231px;
 	height: 70px;
 	position: relative;
@@ -238,15 +238,15 @@ body.single #main #primaryContent {
 }
 
 #primaryContent li#first h3 {
-	background: url(estilo/images/imageText.png) no-repeat 0 0;
+	background: url(images/imageText.png) no-repeat 0 0;
 }
 
 #primaryContent li#second h3 {
-	background: url(estilo/imageText.png) no-repeat 0 -34px;
+	background: url(images/imageText.png) no-repeat 0 -34px;
 }
 
 #primaryContent li#third h3 {
-	background: url(estilo/imageText.png) no-repeat 0 -68px;
+	background: url(images/imageText.png) no-repeat 0 -68px;
 }
 
 #first p,#second p,#third p {
