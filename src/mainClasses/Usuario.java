@@ -2,13 +2,27 @@ package mainClasses;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
+/**
+ * Classe responsavel pela representacao do usuario no sistema. 
+ *
+ */
 public class Usuario {
-
+	/* Informacoes da conta do usuario */
 	private String id, login, senha, nome, email;
-	private List<String> fontesDeSom, listaSeguidores;
-	private Stack<String> visaoDosSons, perfilMusical;
+	/* Usuarios que seguem este usuario */
+	private List<Usuario> listaSeguidores, 
+	/* Usuarios seguidos */
+	fontesDeSom;
+	/* sons postados*/
+	private List<Som> perfilMusical, 
+	/* sons favoritados */
+	sonsFavoritos, 
+	/* sons favoritados pelos usuarios seguidos */
+	feedExtra, 
+	/* sons de dos usuarios seguidos */
+	visaoDosSons;
+
 	/**
 	 * Construtor da Classe Usuario.
 	 * 
@@ -27,204 +41,180 @@ public class Usuario {
 		setNome(nome);
 		setEmail(email);
 		setId(login);
-		this.fontesDeSom = new ArrayList<String>();
-		this.listaSeguidores = new ArrayList<String>();
-		this.visaoDosSons = new Stack<String>();
-		this.perfilMusical = new Stack<String>();
+		this.fontesDeSom = new ArrayList<Usuario>();
+		this.listaSeguidores = new ArrayList<Usuario>();
+		this.visaoDosSons = new ArrayList<Som>();
+		this.perfilMusical = new ArrayList<Som>();
+		this.sonsFavoritos = new ArrayList<Som>();
+		this.feedExtra = new ArrayList<Som>();
 	}
 
-	/**
-	 * Metodo que retorna o login do Usuario.
-	 * 
-	 * @return String login.
-	 */
+
 	public String getLogin() {
 		return login;
 	}
 
-	/**
-	 * Metodo que altera o login do Usuario.
-	 * 
-	 * @param login
-	 *            String login
-	 */
-	private void setLogin(String login) {
+	public void setLogin(String login) {
 		this.login = login;
 	}
 
-	/**
-	 * Metodo que retorna a senha do Usuario
-	 * 
-	 * @return String senha.
-	 */
 	public String getSenha() {
 		return senha;
 	}
 
-	/**
-	 * Metodo que altera a senha do Usuario.
-	 * 
-	 * @param senha
-	 *            String senha
-	 */
-	private void setSenha(String senha) {
+	public void setSenha(String senha) {
 		this.senha = senha;
 	}
 
-	/**
-	 * Metodo que retorna o nome do Usuario
-	 * 
-	 * @return String nome.
-	 */
 	public String getNome() {
 		return nome;
 	}
 
-	/**
-	 * Metodo que altera o nome do Usuario.
-	 * 
-	 * @param nome
-	 *            String nome.
-	 */
-	private void setNome(String nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-	/**
-	 * Metodo que retorna o email do Usuario
-	 * 
-	 * @return String email.
-	 */
 	public String getEmail() {
 		return email;
 	}
 
-	/**
-	 * Metodo que altera o email do Usuario.
-	 * 
-	 * @param email
-	 *            String e-mail.
-	 */
-	private void setEmail(String email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	/**
-	 * Metodo que retorna o identificador do Usuario
-	 * 
-	 * @return String ID.
-	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * Metodo que altera o identificador de um usuario.
+	 * Metodo que altera o identificador de um usuario ("ID" + loguin).
 	 * 
 	 * @param login
 	 *            String login do Usuario.
 	 */
-	private void setId(String login) {
-		this.id = "ID" + login;
+	public void setId(String login) {
+		this.id = "ID" + login.substring(0, 1).toUpperCase()
+				+ login.substring(1);
 	}
 
-	/**
-	 * Metodo que retorna a lista de fontes de Som do Usuario
-	 * 
-	 * @return List<String> fontesDeSom.
-	 */
-	public List<String> getFontesDeSom() {
+	public List<Usuario> getFontesDeSom() {
 		return this.fontesDeSom;
 	}
 
 	/**
-	 * Metodo que adciona um id de usuario que é fonte de sons.
+	 * Adicionado uma nova fonte de som.
 	 * 
-	 * @param String
-	 *            idFontesDeSom
+	 * @param usuario
+	 * 				O usuario que sera a nova fonte de som.
 	 */
-	public void addFontesDeSom(String idFontesDeSom) {
-		this.fontesDeSom.add(idFontesDeSom);
+	public void addFontesDeSom(Usuario usuario) {
+		this.fontesDeSom.add(usuario);
 	}
 
-	/**
-	 * Metodo que retorna a lista de visaoDeSons do Usuario
-	 * 
-	 * @return List<String> visaoDosSons.
-	 */
-	public Stack<String> getVisaoDosSons() {
+	public List<Som> getVisaoDosSons() {
 		return this.visaoDosSons;
 	}
 
 	/**
-	 * Metodo que adciona um som na visao de sons do Usuario
+	 * Metodo que adciona um som na visao de sons do Usuario.
 	 * 
 	 */
-	public void addEmVisaoDosSons(String idSom) {	
-		this.visaoDosSons.add(idSom);
+	public void addVisaoDosSons(Som som) {
+		this.visaoDosSons.add(som);
 	}
 
 	/**
 	 * Metodo que retorna o numero de seguidores que o usuario possui.
 	 * 
-	 * @return int tamanho da lista de seguidores.
+	 * @return Tamanho da lista de seguidores.
 	 */
 	public int getNumeroDeSeguidores() {
 		return this.listaSeguidores.size();
 	}
 
-	/**
-	 * Metodo que retorna a lista de seguidores que o usuario possui.
-	 * 
-	 * @return List<String> lista dos seguidores.
-	 */
-	public List<String> getListaDeSeguidores() {
+	public List<Usuario> getListaDeSeguidores() {
 		return this.listaSeguidores;
 	}
 
 	/**
-	 * Metodo que adciona um id de um Usuario seguidor na lista de seguidores do
-	 * Usuario
+	 * Adiciona um novo usuario a lista de seguidores.
 	 * 
-	 * @param IdUser
-	 *            String Id do Usuario.
+	 * @param usuario
+	 * 			Usuario a ser adicionado.
 	 */
-	public void addListaDeSeguidores(String IdUser) throws Exception {
-		if(!this.listaSeguidores.contains(IdUser)){
-			this.listaSeguidores.add(IdUser);
+	public void addListaDeSeguidores(Usuario usuario){
+		if (!this.listaSeguidores.contains(usuario)) {
+			this.listaSeguidores.add(usuario);
 			ordenaListaSeguidores();
-		}else{
-			throw new Exception("Sessão inexistente");
 		}
 	}
 
 	/**
-	 * Metodo que ordena a lista de seguidores em ordem alfabetica assim que um seguidor é adcionado ou removido.
+	 * Metodo que ordena a lista de seguidores em ordem alfabetica.
 	 */
-	public void ordenaListaSeguidores() {
+	private void ordenaListaSeguidores() {
+		List<String> idsSeguidores = new ArrayList<String>();
+		for (Usuario usuario : listaSeguidores){
+			idsSeguidores.add(usuario.getId());
+		}
+
 		boolean houveTroca = true;
-		List<String> list = this.listaSeguidores;
-		int sizeList = list.size();
 		while (houveTroca) {
 			houveTroca = false;
-			for (int i = 0; i < (sizeList - 1); i++) {
-				String nomeSemId1 = list.get(i).substring(2);
-				String nomeSemId2 = list.get(i + 1).substring(2);
+			for (int i = 0; i < (idsSeguidores.size() - 1); i++) {
+				String nomeSemId1 = idsSeguidores.get(i).substring(2);
+				String nomeSemId2 = idsSeguidores.get(i + 1).substring(2);
 				if (nomeSemId1.compareTo(nomeSemId2) > 0) {
-					String variavelAuxiliar = list.get(i + 1);
-					list.set(i + 1, list.get(i));
-					list.set(i, variavelAuxiliar);
+					String aux1 = idsSeguidores.get(i + 1);
+					idsSeguidores.set(i + 1, idsSeguidores.get(i));
+					idsSeguidores.set(i, aux1);
+
+					Usuario aux2 = listaSeguidores.get(i + 1);
+					listaSeguidores.set(i+1, listaSeguidores.get(i));
+					listaSeguidores.set(i, aux2);
 					houveTroca = true;
 				}
 			}
 		}
 	}
 
-	public void postarSom(String idSom) {
-		this.perfilMusical.add(idSom);
+	/**
+	 * Adiciona um som ao perfil musical do usuario.
+	 * 
+	 * @param som
+	 * 			Som a ser adicinado.
+	 */
+	public void postarSom(Som som) {
+		this.perfilMusical.add(som);
 	}
-	
-	public Stack<String> getPerfilMusical(){
+
+	public List<Som> getPerfilMusical() {
 		return this.perfilMusical;
+	}
+
+	public List<Som> getSonsFavoritos() {
+		return this.sonsFavoritos;
+	}
+
+	/**
+	 * Adiciona um som aos sons favoritos do usuario.
+	 * @param somFavorito
+	 * 			O novo som favoritado.
+	 */
+	public void addSonsFavoritos(Som somFavorito) {
+		this.sonsFavoritos.add(somFavorito);
+	}
+
+	public List<Som> getFeedExtra() {
+		return this.feedExtra;
+	}
+
+	/**
+	 * Adiciona um som ao feed extra do usuario.
+	 * @param som
+	 * 			Som a ser adicionado.
+	 */
+	public void addFeedExtra(Som som) {
+		this.feedExtra.add(som);
 	}
 }

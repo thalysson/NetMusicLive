@@ -3,47 +3,87 @@ package mainClasses;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GerenciaSessao {
-	private Map<String, String> sessoes; // Mapa com sessaoID e login.
+import util.Utilitario;
+import exception.SessaoInexistenteException;
+import exception.SessaoInvalidaException;
 
-	/**
-	 * Construtor da classe GerenciaSessao.
-	 */
+/**
+ * Classe responsavel pelo gerenciamento das sessoes do Sistema.
+ *
+ */
+public class GerenciaSessao {
+	/* Mapa com sessaoID e login */
+	private Map<String, String> sessoes; 
+
 	public GerenciaSessao() {
 		this.sessoes = new HashMap<String, String>();
 	}
 
-	/** Metodo que exclui uma sessao do conjunto de sessoes presentes no sistema
+	/**
+	 * Exclui uma sessao do conjunto de sessoes presentes no sistema.
 	 * 
-	 * @param login
+	 * @param login 
+	 * 			Login correspondente a sessao a ser excluida.
 	 */
 	public void encerrarSessao(String login) {
-		
 		this.sessoes.remove(login);
 	}
 
-	/**Metodo que da inicio a uma sessao.
+	/**
+	 * Da inicio a uma sessao.
 	 * 
-	 * @param login login do usuario
-	 * @param senha senha do usuario
-	 * @return String com id da sessao.
+	 * @param login
+	 *            Login do usuario.
+	 * @param senha
+	 *            Senha do usuario.
+	 * @return Id da sessao.
 	 */
-	public String abrirSessao(String login, String senha) {  // falta conferir se login e senha batem.
+	public String abrirSessao(String login, String senha) { 
 		String id = "sessao" + login;
-		this.sessoes.put(id, login);
-		return id;
+		if(!existeSessao(id)){
+			this.sessoes.put(id, login);
+			return id;
+		}
+		return null;
 	}
 
-	/** Metodo que retorno o login do usuario de uma determinada sessao a partir do id da sessao.
+	/**
+	 * Retorna o login do usuario de uma determinada sessao a partir do id da sessao.
 	 * 
 	 * @param idsessao
-	 * @return String String com o login do usuario.
+	 * 				Id da sessao correspondente.
+	 * @return Login do usuario.
+	 * @throws Exception 
 	 */
-	public String getLogin(String idsessao) {
-		return this.sessoes.get(idsessao);
+	public String getLogin(String idSessao) throws Exception {
+		verificaSessao(idSessao);
+		return this.sessoes.get(idSessao);
+	}
+
+	/** Verifica se uma sessao existe no sistema a partir de um id de sessao.
+	 * 
+	 * @param idsessao
+	 * 				Id da sessao.
+	 * @return true caso a sessao exista, false caso contrario.
+	 */
+	public boolean existeSessao(String idsessao) {
+		return this.sessoes.containsKey(idsessao);
 	}
 	
-	public boolean existeSessao(String idsessao){
-		return this.sessoes.containsKey(idsessao);
+	/**
+	 * Verifica se a sessao e valida/existe.
+	 * 
+	 * @param idsessao
+	 *            Id da sessao a ser verificada.
+	 * @throws Exception
+	 *             {@link SessaoInvalidaException, SessaoInexistenteException}
+	 */
+	public void verificaSessao(String idSessao) throws Exception {
+		if (!Utilitario.elementIsValid(idSessao)) {
+			throw new SessaoInvalidaException();
+			
+		} else if (!existeSessao(idSessao)) {
+			throw new SessaoInexistenteException();
+		}
 	}
 }

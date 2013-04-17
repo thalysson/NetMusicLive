@@ -14,62 +14,84 @@
 		content="Trabalho para projeto da disciplina Sistemas de Informação
 	1 do curso Ciência da Computação da UFCG." />
 	<title>NetMusicLive</title>
-	<link rel="stylesheet" href="css/reset.css" type="text/css" />
-	<link rel="stylesheet" href="css/default.css" type="text/css" />
+	<link rel="stylesheet" href="estilo/reset.css" type="text/css" />
+	<link rel="stylesheet" href="estilo/default.css" type="text/css" />
 
 </h:head>
 
 <h:body>
 
 	<div id="subHeader">
-		<p:graphicImage url="images/smallLogo.png"></p:graphicImage>
-
+		<p:graphicImage url="estilo/images/smallLogo.png"></p:graphicImage>
 	</div>
 
 	<div id="container">
-		<p:graphicImage url="images/smallLogoName.png"></p:graphicImage>
+		<p:graphicImage url="estilo/images/smallLogoName.png"></p:graphicImage>
 
 		<div id="formSearch">
 			<h:form>
-				<h:panelGrid columns="2">
-					<p:inputText></p:inputText>
-					<p:commandButton value="Search"
-						style="margin-left:10px;font-size:14px">
-					</p:commandButton>
+
+				<h:panelGrid columns="3">
+					<h:selectOneMenu value="3" style="margin-right:5px;font-size:14px">
+						<f:selectItem itemLabel="Pesquisar por:" itemValue="" />
+						<f:selectItem itemLabel="Usuarios" itemValue="1" />
+						<f:selectItem itemLabel="Sons" itemValue="2" />
+					</h:selectOneMenu>
+					<p:inputText id="searchText" />
+					<p:commandButton value="Pesquisar" ajax="false"
+						style="margin-left:10px;font-size:13px" />
 				</h:panelGrid>
 			</h:form>
 		</div>
 
 		<div id="userPhoto">
-			<p:graphicImage url="images/users/default.png"></p:graphicImage>
+			<h:panelGrid columns="2" cellspacing="10">
+				<p:graphicImage url="#{homeBean.fotoUser}" />
+				<p>UserName</p>
+			</h:panelGrid>
 		</div>
 
-		<div>
-			<p:inputTextarea value="Postagem de Mensagem" cols="50" style="margin-left: 50px;margin-top: 30px;magin-bottom:5px;;"></p:inputTextarea>
-		</div>
-		<div id="main">
+		<h:form>
+			<p:inputTextarea value="#{homeBean.mensagemDePostagem}" cols="50"
+				rows="2" style="margin-top: 30px;margin-left:100px;" />
 
-			<div>
-				<p:commandButton value="Enviar"></p:commandButton>
-				<p:commandButton value="Apagar" style="margin-left:20px;"></p:commandButton>
+			<div id="formPostagemMusica" style="margin-top: 5px;">
+				<p:commandButton value="Enviar" ajax="false"
+					action="#{homeBean.postarSom}"
+					style="margin-left:100px;font-size:14px" />
+
+				<p:commandButton value="Apagar" ajax="false"
+					action="#{homeBean.apagarMensagemDePostagem}"
+					style="margin-left:10px;font-size:14px" />
 			</div>
-		</div>
+		</h:form>
 
-		<h:panelGrid columns="10" cellpadding="5"
-			columnClasses="label, column">
-			<h:outputText value="Friend List" />
-			<p:selectOneListbox id="scroll" value="#{UserBean.friend}"
-				var="friend" style="height:200px">
-				<f:selectItems value="#{UserBean.friends}" />
+
+		<div id="feeds">
+			<h2>Feed Usuario</h2>
+			<p:dataTable id="MainFeed" var="som" value="#{homeBean.mainFeed}"
+				emptyMessage="Nenhum som">
 				<p:column>
-					<p:graphicImage value="/images/users/#{friend.getNome()}"
-						width="40" />
+					<p:commandLink value="#{som.link}" />
 				</p:column>
-			</p:selectOneListbox>
-		</h:panelGrid>
+				<p:column>
+					#{som.data}
+				</p:column>
 
+			</p:dataTable>
+
+			<h2>Friend List</h2>
+			<p:dataTable id="FriendList" var="friend"
+				value="#{homeBean.fontesDeSom}"
+				emptyMessage="Nenhum Usuario Seguido.">
+				<p:column>
+			#{friend}
+			</p:column>
+			</p:dataTable>
+		</div>
 
 	</div>
+
 
 	<div id="footerWrap">
 

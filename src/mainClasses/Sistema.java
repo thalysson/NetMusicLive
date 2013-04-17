@@ -1,233 +1,246 @@
 package mainClasses;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
-public class Sistema {
+import tiposordenacao.OrdenaFeedPrincipal;
+import tiposordenacao.SonsMaisFavoritadosSistema;
+import tiposordenacao.SonsMaisFavoritadosUsuario;
+import tiposordenacao.SonsMaisRecentes;
+import tiposordenacao.TipoFeedPrincipal;
+import util.Utilitario;
+import exception.AtributoInexistenteException;
+import exception.AtributoInvalidoException;
+import exception.DataInvalidaException;
+import exception.EmailDuplicadoException;
+import exception.EmailInvalidoException;
+import exception.LoginDuplicadoException;
+import exception.LoginInexistenteException;
+import exception.LoginInvalidoException;
+import exception.NomeInvalidoException;
+import exception.RegraInexistenteException;
+import exception.RegraInvalidaException;
+import exception.SomInexistenteException;
+import exception.SomInvalidoException;
+import exception.UsuarioInexistenteException;
 
-	private GerenciaSons gerenciaSons;
+/**
+ * Executa as acoes solicitadas pela {@link NetMusicLive}, gerencia as
+ * instrucoes.
+ */
+public class Sistema implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private GerenciaSessao gerenciaSessao;
-	private GerenciaUsuarios gerenciaUsuarios;
+	private GerenciaUsuarioSom gerenciador;
+	private OrdenaFeedPrincipal feedPrincipal;
+
+	public Sistema() {
+		zerarSistema();
+	}
 
 	public void zerarSistema() {
-		this.gerenciaSons = new GerenciaSons();
-		this.gerenciaSessao = new GerenciaSessao();
-		this.gerenciaUsuarios = new GerenciaUsuarios();
+		gerenciaSessao = new GerenciaSessao();
+		gerenciador = new GerenciaUsuarioSom();
+		feedPrincipal = new SonsMaisRecentes();
 	}
 
-	public void criarUsuario(String login, String senha, String nome,String email) throws Exception {
-		this.gerenciaUsuarios.criarUsuario(login, senha, nome, email);
+	public void criarUsuario(String login, String senha, String nome,
+			String email) throws Exception {
+		if (!Utilitario.elementIsValid(login)) {
+			throw new LoginInvalidoException();
+
+		} else if (!Utilitario.elementIsValid(nome)) {
+			throw new NomeInvalidoException();
+
+		} else if (!Utilitario.elementIsValid(email)) {
+			throw new EmailInvalidoException();
+
+		} else {
+			if (gerenciador.existeLoginUsuario(login)) {
+				throw new LoginDuplicadoException();
+			}
+			if (gerenciador.existeEmailUsuario(email)) {
+				throw new EmailDuplicadoException();
+			}
+			gerenciador.criarUsuario(login, senha, nome, email);
+		}
 	}
 
+	public boolean verificaLoginESenha(String login, String senha) {
+		return gerenciador.verificaLoginESenha(login, senha);
+	}
 
 	public String abrirSessao(String login, String senha) throws Exception {
-		if(!elementIsValid(login)){
-			throw new Exception("Login inválido");
-		}else if(this.gerenciaUsuarios.loginJaExiste(login)){
-			if(!this.gerenciaUsuarios.verificaSenha(login, senha)){
-				throw new Exception("Login inválido");
+		if (!Utilitario.elementIsValid(login)) {
+			throw new LoginInvalidoException();
+
+		} else if (gerenciador.existeLoginUsuario(login)) {
+			if (!verificaLoginESenha(login, senha)) {
+				throw new LoginInvalidoException();
 			}
-			return this.gerenciaSessao.abrirSessao(login,senha);
-		}else{
-			throw new Exception("Usuário inexistente");
+			return gerenciaSessao.abrirSessao(login, senha);
+			
+		} else {
+			throw new UsuarioInexistenteException();
 		}
-	}
-	
-	public String getPerfilMusical(String sessao) {
-		String loginDaSessao = this.gerenciaSessao.getLogin(sessao);
-		Usuario user = this.gerenciaUsuarios.getUser(loginDaSessao);
-		return retornaListComChaves(this.gerenciaSons.getPerfilMusical(user));
-	}
-	
-	public boolean dataIsValida(String dataParam){
-		try {
-			String[] datas = dataParam.split("/");
-			Integer dia = Integer.parseInt(datas[0]);
-			Integer mes = Integer.parseInt(datas[1]);
-			Integer ano = Integer.parseInt(datas[2]);
-			if(dia < 1 || dia > 31){return false;}
-			else if(ano<2013){return false;}
-			else if(mes < 1 || mes > 12){return false;}
-			else{
-				if(mes == 2){
-					if(dia > 29){return false;}
-					// se o ano for bisexto e dia for igual a 29, entao false.
-					else if(!((ano % 4 == 0) && ( (ano % 100 != 0) || (ano % 400 == 0))) && dia==29){
-						return false;
-					}
-				}else{
-				List<Integer> meses30dias = new ArrayList<Integer>();
-				meses30dias.add(4);meses30dias.add(6);meses30dias.add(9);meses30dias.add(11);
-				if(meses30dias.contains(mes) && dia >=31){return false;}
-				}
-			}
-		} catch (Exception e) {
-			return false;
-		}return true;
-	}
-	
-	public String postarSom(String sessao,String link,String dataCriacao) throws Exception{
-		if(!elementIsValid(link)){
-			throw new Exception("Som inválido");
-		} else if(!dataIsValida(dataCriacao)){
-			throw new Exception("Data de Criação inválida");
-		}
-		String login = this.gerenciaSessao.getLogin(sessao);
-		Usuario user = this.gerenciaUsuarios.getUser(login);
-		 return this.gerenciaSons.postarSom(user,link,dataCriacao);
-	}
-	
-	public String getAtributoUsuario(String login, String atributo) throws Exception{
-		if (!elementIsValid(atributo)) {
-			throw new Exception("Atributo inválido");
-		}
-		else if(!elementIsValid(login)){
-			throw new Exception("Login inválido");
-		}
-		else if (!this.gerenciaUsuarios.loginJaExiste(login)) {
-			throw new Exception("Usuário inexistente");
-		}
-		else {	
-			String result = this.gerenciaUsuarios.getAtributoUsuario(login,atributo);
-			if(!result.isEmpty()){ return result;}
-		}
-		throw new Exception("Atributo inexistente");
 	}
 
-	public String getAtributoSom(String idSom, String atributo) throws Exception{
-		if(idSom == null){
-			throw new Exception("Som inexistente");
-		} else if(idSom.isEmpty()){
-			throw new Exception("Som inválido");
-		} else if(!elementIsValid(atributo)){
-			throw new Exception("Atributo inválido");
+	public boolean existeSessao(String login) {
+		String idsessao = "sessao" + login;
+		return gerenciaSessao.existeSessao(idsessao);
+	}
+
+	public String getAtributoUsuario(String login, String atributo)
+			throws Exception {
+		if (!Utilitario.elementIsValid(atributo)) {
+			throw new AtributoInvalidoException();
+			
+		} else if (!Utilitario.elementIsValid(login)) {
+			throw new LoginInvalidoException();
+			
+		} else if (!this.gerenciador.existeLoginUsuario(login)) {
+			throw new UsuarioInexistenteException();
+			
+		} else {
+			String result = this.gerenciador.getAtributoUsuario(login,
+					atributo);
+			if (!result.isEmpty()) {
+				return result;
+			}
 		}
-		String result = this.gerenciaSons.getAtributoSom(idSom,atributo);
-		if(!result.isEmpty()){
-			return result;
-		}else{
-			throw new Exception("Atributo inexistente");
+		throw new AtributoInexistenteException();
+	}
+
+	public List<Som> getPerfilMusical(String idsessao) throws Exception {
+		return gerenciador.getPerfilMusical(gerenciaSessao.getLogin(idsessao));
+	}
+
+	public String postarSom(String idSessao, String link, String dataCriacao)
+			throws Exception {
+		if (!Utilitario.elementIsValid(link)) {
+			throw new SomInvalidoException();
+
+		} else if (!Utilitario.dataIsValida(dataCriacao)) {
+			throw new DataInvalidaException();
+		}
+
+		return gerenciador.postarSom(gerenciaSessao.getLogin(idSessao), link, dataCriacao);
+	}
+
+	public String getAtributoSom(String idSom, String atributo)
+			throws Exception {
+		if (!Utilitario.elementIsValid(idSom)) {
+			throw new SomInvalidoException();
+		} else if (!Utilitario.elementIsValid(atributo)) {
+			throw new AtributoInvalidoException();
+		}
+
+		String valorAtributo = gerenciador.getAtributoSom(idSom, atributo);
+		if (!valorAtributo.isEmpty()) {
+			return valorAtributo;
+		}
+		throw new AtributoInexistenteException();
+	}
+
+	public void seguirUsuario(String idSessaoSeguidor, String loginSeguido)
+			throws Exception {
+		String loginSeguidor = gerenciaSessao.getLogin(idSessaoSeguidor);
+		
+		if (!Utilitario.elementIsValid(loginSeguido)) {
+			throw new LoginInvalidoException();
+			
+		} else if (loginSeguidor.equals(loginSeguido)) {
+			throw new LoginInvalidoException();
+		}
+
+		if (gerenciador.existeLoginUsuario(loginSeguido)) { 
+			gerenciador.seguirUsuario(loginSeguidor, loginSeguido);
+			
+		} else {
+			throw new LoginInexistenteException();
 		}
 	}
+
+	public List<Usuario> getListaDeSeguidores(String idSessao) throws Exception {
+		return gerenciador.getListaSeguidoresUsuario(gerenciaSessao.getLogin(idSessao));
+	}
+
+	public int getNumeroDeSeguidores(String idSessao) throws Exception {
+		return getListaDeSeguidores(idSessao).size();
+	}
+
+	public List<Usuario> getFontesDeSons(String idSessao) throws Exception {
+		return gerenciador.getFontesSomUsuario(gerenciaSessao.getLogin(idSessao));
+	}
+
+	public String getIDUsuario(String idsessao) throws Exception {
+		return gerenciador.getAtributoUsuario(gerenciaSessao.getLogin(idsessao), "id");
+	}
+
+	public List<Som> getVisaoDosSons(String idSessao) throws Exception {
+		return gerenciador.getVisaoSonsUsuario(gerenciaSessao.getLogin(idSessao));
+	}
+
+	public List<Som> getSonsFavoritos(String idSessao) throws Exception {
+		return gerenciador.getSonsFavoritosUsuario(gerenciaSessao.getLogin(idSessao));
+	}
+
+	public List<Som> getFeedExtra(String idSessao) throws Exception {
+		return gerenciador.getFeedExtraUsuario(gerenciaSessao.getLogin(idSessao));
+	}
 	
-	public void seguirUsuario (String idsessao,String login) throws Exception{
-		verificaSessao(idsessao);
-		if(!elementIsValid(idsessao)){
-			throw new Exception("Sessão inválida");
-		}else if(!elementIsValid(login) || this.gerenciaSessao.getLogin(idsessao).equals(login)){
-			throw new Exception("Login inválido");
+	public List<Som> getMainFeedComSonsDoUser(String idSessao) throws Exception { 
+		List<Usuario> listAuxiliar = new ArrayList<Usuario>();
+		Usuario user = gerenciador.getUsuario(gerenciaSessao.getLogin(idSessao), "login");
+		listAuxiliar.add(user);
+		
+		List<Som> sons = feedPrincipal.ordena(listAuxiliar,getMainFeed(idSessao));
+		return sons;
+	}
+	
+	public List<Som> getMainFeed(String idSessao) throws Exception {
+		return feedPrincipal.ordena(getFontesDeSons(idSessao), getSonsFavoritos(idSessao));
+	}
+
+	public void favoritarSom(String idSessao, String idSom) throws Exception {
+		if(!Utilitario.elementIsValid(idSom)){
+			throw new SomInvalidoException();
 		}
 		
-		// Identificando Usuario que sera seguido:
-		if(this.gerenciaUsuarios.loginJaExiste(login)){
-			Usuario userSeguido = this.gerenciaUsuarios.getUser(login);
-			// Identificando Usuario que decidiu ser seguidor:
-			String loginSeguidor = this.gerenciaSessao.getLogin(idsessao);
-			Usuario userSeguidor = this.gerenciaUsuarios.getUser(loginSeguidor);
-			// Passando para a classe que gerencia o sons a responsabilidade de adcionar nas fontes de som, e na lista de seguidores.
-			this.gerenciaSons.seguirUsuario(userSeguidor, userSeguido);
-		}else{
-			throw new Exception("Login inexistente");
-		}
-	}
-	
-	public String getListaDeSeguidores(String idsessao) throws Exception{
-		verificaSessao(idsessao);
-		// Identificando Usuario:
-		String loginUser = this.gerenciaSessao.getLogin(idsessao);
-		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
-		return retornaListComChaves(user.getListaDeSeguidores());
-	}
-	
-	public int getNumeroDeSeguidores (String idsessao) throws Exception{
-		verificaSessao(idsessao);
-		String loginUser = this.gerenciaSessao.getLogin(idsessao);
-		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
-		return user.getNumeroDeSeguidores();
-	}
-	
-	public String getFontesDeSons(String idsessao) throws Exception{
-		verificaSessao(idsessao);
-		String loginUser = this.gerenciaSessao.getLogin(idsessao);
-		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
-		return retornaListComChaves(user.getFontesDeSom());
-	}
-	
-	
-	/** Metodo que retorna o id de uma determinado usuario a partir do identificador de uma sessao.
-	 * 
-	 * @param sessao
-	 * @return
-	 */
-	public String getIDUsuario(String sessao){
-		return this.gerenciaUsuarios.getAtributoUsuario(this.gerenciaSessao.getLogin(sessao),"id");
-	}
-	
-	public String getVisaoDosSons(String idsessao){
-		String loginUser = this.gerenciaSessao.getLogin(idsessao);
-		Usuario user = this.gerenciaUsuarios.getUser(loginUser);
-		return retornaStackComChaves(this.gerenciaSons.getVisaoDosSons(user));
-	}
-	
-	public void encerrarSessao(String login){
-		this.gerenciaSessao.encerrarSessao("sessao"+login);
-	}
-
-	/**
-	 * Metodo que ao ser chamado finaliza o sistema.
-	 */
-	public void encerrarSistema(){
-		
-	}
-	
-	public String retornaStackComChaves(Stack<String> list){
-		String retorno ="{";
-		try {
-			int sizeList = list.size();
-			for(int i=0;i<sizeList;i++){
-				retorno = retorno + list.pop();
-				
-				if(i < (sizeList-1)){
-					retorno = retorno + ",";
-				}
-			}
-		} catch (Exception e) {}
-		retorno = retorno +"}";
-		return retorno;
-	}
-	
-	public String retornaListComChaves(List<String> list){
-		String retorno ="{";
-		try {
-			int sizeList = list.size();
-			for(int i=0;i<sizeList;i++){
-				retorno = retorno + list.get(i);
-				if(i < (sizeList-1)){
-					retorno = retorno + ",";
-				}
-			}
-		} catch (Exception e) {}
-		retorno = retorno +"}";
-		return retorno;
-	}
-	
-	public void verificaSessao(String idsessao) throws Exception{
-		if(!elementIsValid(idsessao)){
-			throw new Exception("Sessão inválida");
-		} else if(!this.gerenciaSessao.existeSessao(idsessao)){
-			throw new Exception("Sessão inexistente");
+		if(!gerenciador.favoritarSom(gerenciaSessao.getLogin(idSessao), idSom)){
+			throw new SomInexistenteException();
 		}
 	}
 
-	/** Metodo que auxilia na verificação de variaveis na forma de String.
-	 * 
-	 * @param  String element
-	 * @return true se elemento nao for null ou vazio, false caso contrario.
-	 */
-	public static boolean elementIsValid(String element){
-		if(element == null || element.isEmpty()){ 
-			return false;
-		}return true;
+	public void setMainFeedRule(String idsessao, String rule) throws Exception {
+		gerenciaSessao.verificaSessao(idsessao);
+		if (!Utilitario.elementIsValid(rule)) {
+			throw new RegraInvalidaException();
+		}
+
+		if (rule.equals(TipoFeedPrincipal.SONS_RECENTES.toString())) {
+			feedPrincipal = new SonsMaisRecentes();
+			
+		} else if (rule.equals(TipoFeedPrincipal.SONS_FAVORITADOS_SISTEMA
+				.toString())) {
+			feedPrincipal = new SonsMaisFavoritadosSistema();
+			
+		} else if (rule.equals(TipoFeedPrincipal.SONS_FAVORITADOS_USUARIO
+				.toString())) {
+			feedPrincipal = new SonsMaisFavoritadosUsuario();
+			
+		} else {
+			throw new RegraInexistenteException();
+		}
+	}
+
+	public void encerrarSessao(String login) {
+		gerenciaSessao.encerrarSessao("sessao" + login);
+	}
+
+	public void encerrarSistema() {
+
 	}
 }
