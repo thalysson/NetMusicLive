@@ -11,10 +11,8 @@
 <ui:composition template="template.xhtml">
 	<ui:define name="conteudoCentral">
 		<div id="formResgister">
-			<h:form>
-				
+			<h:form id="regForm">
 				<p:growl id="growl" showDetail="true" sticky="true" />
-				
 				<h2 class="textForm">Crie uma nova conta.</h2>
 				<h4>Informe os seguintes dados:</h4>
 				<h:panelGrid columns="2">
@@ -33,7 +31,7 @@
 
 					<br></br>
 					<p:commandButton value="Cadastre-se" ajax="false"
-						action="#{registerBean.criaUsuario}" update="regForm"/>
+						action="#{registerBean.criaUsuario}" update="regForm" />
 				</h:panelGrid>
 			</h:form>
 		</div>

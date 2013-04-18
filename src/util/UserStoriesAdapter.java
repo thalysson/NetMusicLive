@@ -3,9 +3,9 @@ package util;
 import java.util.ArrayList;
 import java.util.List;
 
-import mainClasses.NetMusicLive;
-import mainClasses.Som;
-import mainClasses.Usuario;
+import mainclasses.NetMusicLive;
+import mainclasses.Som;
+import mainclasses.Usuario;
 
 /**
  * Classe responsavel pela conexao entre {@link NetMusicLive} e os testes easyaccept. 
@@ -147,7 +147,40 @@ public class UserStoriesAdapter {
 	public void encerrarSistema() {
 		this.netMusicLive.encerrarSistema();
 	}
-
+	
+	public String criarLista(String idSessao, String nomeLista) throws Exception {
+		return netMusicLive.criarLista(idSessao, nomeLista);
+	}
+	
+	public void adicionarUsuario(String idSessao, String idLista, String idUsuario) throws Exception{
+		netMusicLive.adicionarUsuario(idSessao, idLista, idUsuario);
+	}
+	
+	public String getSonsEmLista(String idSessao,String idLista) throws Exception{
+		List<String> sonsEmLista = new ArrayList<String>();
+		for (Som som : this.netMusicLive.getSonsEmLista(idSessao, idLista)){
+			sonsEmLista.add(som.getId());
+		}
+		return retornaComChaves(sonsEmLista, "stack");
+	}
+	
+	public int getNumFontesEmComum(String idSessao, String idUsuario) throws Exception {
+		return netMusicLive.getNumFontesEmComum(idSessao, idUsuario);
+		
+	}
+	
+	public int getNumFavoritosEmComum(String idSessao, String idUsuario) throws Exception {
+		return netMusicLive.getNumFavoritosEmComum(idSessao, idUsuario);
+	}
+	
+	public String getFontesDeSonsRecomendadas(String idSessao) throws Exception {
+		List<String> fontesRecomendadas = new ArrayList<String>();
+		for (Usuario usuario : this.netMusicLive.getFontesDeSonsRecomendadas(idSessao)){
+			fontesRecomendadas.add(usuario.getId());
+		}
+		return retornaComChaves(fontesRecomendadas, "list");
+	}
+	
 	private String retornaComChaves(List<String> list, String formato) {
 		String retorno = "{";
 		int sizeList = list.size();

@@ -123,27 +123,18 @@ body#subpage #container {
 	background: #f7f5f4 url(images/containerBG_alt.jpg) repeat-x;
 }
 
-#subHeader {
+#subHeader{
 	text-align: left;
 	left: 10px;
 	position: absolute;
 }
 
-#userPhoto {
+#userPhoto{
+	padding-top: 13px;
 	padding-left: 20px;
 }
 
-#userPhoto p {
-	margin-left: 10px;
-	font-size: 30px;
-	color: #a68a7d;
-}
-
-#feeds{
-	padding: 0 150px 0px 150px;
-}
-
-/* THE LOGO */
+/* THE LOGO */ 
 #slogan {
 	height: 145px;
 	clear: both;
@@ -154,10 +145,9 @@ body#subpage #container {
 	padding-left: 600px;
 	font-size: 12px;
 }
-
-#formSearch {
+#formSearch{
 	padding-top: 20px;
-	padding-left: 500px;
+	padding-left: 600px;
 }
 
 #formLogin #textLogin,#textSenha {
@@ -191,7 +181,7 @@ body#subpage #container {
 	height: 67px;
 }
 /* estilo para a logo <p:graphicImage> da pagina.*/
-#slogan img {
+#slogan img { 
 	position: absolute;
 	top: 70px;
 	left: -40px;
@@ -210,9 +200,10 @@ body#subpage #container {
 	border-left: 1px solid #4f3b33;
 }
 
+
 /* MAIN CONTENT */
 #main {
-	padding: 0 36px 50px 350px;
+	padding: 0 36px 100px 350px;
 	overflow: hidden;
 	border-left: 1px solid white;
 	border-right: 1px solid white;
@@ -270,8 +261,7 @@ body.single #main #primaryContent {
 	display: block;
 }
 
-#formResgister #textRegisterLogin,#textRegisterNome,#textRegisterEmail,#textRegisterSenha
-	{
+#formResgister #textRegisterLogin, #textRegisterNome, #textRegisterEmail, #textRegisterSenha {
 	padding-right: 20px;
 	color: #2f231e;
 }

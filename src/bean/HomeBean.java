@@ -4,51 +4,58 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
-import mainClasses.Som;
-import mainClasses.Usuario;
+import util.Menssagens;
+
+import mainclasses.Som;
+import mainclasses.Usuario;
 
 @ManagedBean
-public class HomeBean extends DefaultBean{
+public class HomeBean extends DefaultBean {
 
-	private String mensagemDePostagem,
-					idsessao,
-					fotoUser;
-	private final String caminhoFotoPadrao ="estilo/images/users/default.png";
+	private String mensagemDePostagem, idsessao, fotoUser;
+	private final String caminhoFotoPadrao = "estilo/images/users/default.png";
 	private String textSearch;
 	private List<Usuario> searchResults;
-	
-	private String fotoUserSelected,nameUserSelected;
-	
-	
+
+	private String fotoUserSelected, nameUserSelected;
+
+	private String media = "http://www.youtube.com/v/KZnUr8lcqjo";
+
 	public HomeBean() {
 		super();
 		setIDSession();
 		setMensagemDePostagem("Postagem de Mensagem..");
 	}
 
-	public void postarSom(){
-		boolean result = this.interfaceWebAdapter.postarSom(getIDSession(),mensagemDePostagem);
+	private void setIDSession() {
+		this.idsessao = (String) FacesContext.getCurrentInstance()
+				.getExternalContext().getSessionMap().get("idsessao");
+	}
+
+	private String getIDSession() {
+		return this.idsessao;
+	}
+
+	public void postarSom() {
+		boolean result = this.interfaceWebAdapter.postarSom(getIDSession(),
+				mensagemDePostagem);
 		apagarMensagemDePostagem();
-		if(!result){
-			geraMensagemDeErro("postagemDeSomInvalida");
+		if (!result) {
+			Menssagens.addMsgErro("Postagem De Som Invalida");
 		}
 	}
 
-	public void geraMensagemDeErro(String tipo){
-		
-	}
-	
-	public List<Som> getMainFeed(){
+	public List<Som> getMainFeed() {
 		return this.interfaceWebAdapter.getMainFeed(getIDSession());
 	}
-	
-	public List<String> getFontesDeSom(){
+
+	public List<String> getFontesDeSom() {
 		return this.interfaceWebAdapter.getNomesFontesDeSons(getIDSession());
 	}
-	
+
 	public String getFotoUser() {
+
 		setFotoUser(caminhoFotoPadrao);
 		return fotoUser;
 	}
@@ -64,35 +71,34 @@ public class HomeBean extends DefaultBean{
 	public void setMensagemDePostagem(String mensagemDePostagem) {
 		this.mensagemDePostagem = mensagemDePostagem;
 	}
-	
-	public void apagarMensagemDePostagem(){
+
+	public void apagarMensagemDePostagem() {
 		setMensagemDePostagem("");
 	}
-	
-	public String search(){
-		if(!getTextSearch().equals(null)){
+
+	public String getMedia() {
+		return media;
+	}
+
+	public void setMedia(String media) {
+		this.media = media;
+	}
+
+	public String search() {
+		if (!getTextSearch().equals(null)) {
 			setSearchResults(this.interfaceWebAdapter.search(getTextSearch()));
 			return "searchpage?faces-redirect=false";
 		}
-		//printa mensagem de erro
+		// printa mensagem de erro
 		return "homepage?faces-redirect=true";
 	}
 
-	public String goUsuarioPage(){
-		System.out.println("entrou aqui");
-		return "usuariopage?faces-redirect=false";
+	public List<Usuario> getSearchResults() {
+		return searchResults;
 	}
-	
-	public List<Som> perfilMusicalUserSelected(){
-		return this.interfaceWebAdapter.perfilMusicalUserSelected(this.nameUserSelected);
-	}
-	
-	private void setIDSession() {
-		this.idsessao = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("idsessao");
-	}
-	
-	private String getIDSession(){
-		return this.idsessao;
+
+	public void setSearchResults(List<Usuario> searchResults) {
+		this.searchResults = searchResults;
 	}
 
 	public String getTextSearch() {
@@ -103,11 +109,19 @@ public class HomeBean extends DefaultBean{
 		this.textSearch = textSearch;
 	}
 
-	public List<Usuario> getSearchResults() {
-		return searchResults;
+	public String getFotoUserSelected() {
+		return fotoUserSelected;
 	}
-	
-	public void setSearchResults(List<Usuario> searchResults) {
-		this.searchResults = searchResults;
+
+	public void setFotoUserSelected(String fotoUserSelected) {
+		this.fotoUserSelected = fotoUserSelected;
+	}
+
+	public String getNameUserSelected() {
+		return nameUserSelected;
+	}
+
+	public void setNameUserSelected(String nameUserSelected) {
+		this.nameUserSelected = nameUserSelected;
 	}
 }

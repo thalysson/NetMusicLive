@@ -5,18 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import mainClasses.NetMusicLive;
-import mainClasses.Som;
-import mainClasses.Usuario;
+import mainclasses.NetMusicLive;
+import mainclasses.Som;
+import mainclasses.Usuario;
 
 public class InterfaceWebAdapter{
 	
 	private NetMusicLive netMusicLive;
 	public static InterfaceWebAdapter interfaceWebAdapter;
 	
-	/**
-	 * Construtor da Classe.
-	 */
 	private InterfaceWebAdapter(){
 		netMusicLive = NetMusicLive.getInstance();
 	}
@@ -28,7 +25,7 @@ public class InterfaceWebAdapter{
 		return interfaceWebAdapter;
 	}
 	
-	public void criaUsuario(String login,String senha,String nome,String email) throws Exception{
+	public void criaUsuario(String login,String senha,String nome,String email) {
 		this.netMusicLive.criarUsuario(login, senha, nome, email);
 	}
 
@@ -36,7 +33,11 @@ public class InterfaceWebAdapter{
 		return this.netMusicLive.existeSessao(login);
 	}
 	
-	public String abrirSessao(String login, String password) throws Exception {
+	public void encerrarSessao(String login) {
+		this.netMusicLive.encerrarSessao(login);
+	}
+	
+	public String abrirSessao(String login, String password) {
 		return this.netMusicLive.abrirSessao(login, password);
 	}
 
@@ -44,7 +45,7 @@ public class InterfaceWebAdapter{
 		try {
 			return this.netMusicLive.getMainFeedComSonsDoUser(idsessao);			
 		} catch (Exception e) {
-			System.out.println("erro interfaceWebAdapter");
+			Menssagens.addMsgErro("erro InterfaceWebAdapter");
 			return null;
 		}
 	}
@@ -60,7 +61,10 @@ public class InterfaceWebAdapter{
 		} catch (Exception e) {
 			return false;
 		}
-		
+	}
+	
+	public List<Usuario> search(String textSearch) {
+		return this.netMusicLive.search(textSearch);
 	}
 	
 	public boolean verificaLoginESenha(String login,String senha){
@@ -77,14 +81,5 @@ public class InterfaceWebAdapter{
 		}catch(Exception e){}
 		
 		return nomeUsuarios;
-	}
-
-	public List<Usuario> search(String textSearch) {
-		return this.netMusicLive.search(textSearch);
-	}
-
-	public List<Som> perfilMusicalUserSelected(String nameUserSelected) {
-		return this.netMusicLive.perfilMusicalUserSelected(nameUserSelected);
-		
 	}	
 }

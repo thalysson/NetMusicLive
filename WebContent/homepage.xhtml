@@ -20,7 +20,17 @@
 </h:head>
 
 <h:body>
-
+	<div>
+		<h:form>
+			<p:menubar style="width:100%;background:#2f231e">
+				<p:menuitem value="Home"
+					url="http://localhost:8080/ProjetoSI1/homepage.jsf"
+					icon="ui-icon-home" style="font-size:16px" />
+				<p:menuitem value="Logout" action="#{loginBean.logout}"
+					icon="ui-icon-close" style="font-size:16px" />
+			</p:menubar>
+		</h:form>
+	</div>
 	<div id="subHeader">
 		<p:graphicImage url="estilo/images/smallLogo.png"></p:graphicImage>
 	</div>
@@ -32,9 +42,12 @@
 			<h:form>
 
 				<h:panelGrid columns="3">
-					<p:inputText id="searchText" value="#{homeBean.textSearch}"/>
-					<p:commandButton value="Pesquisar" action="#{homeBean.search}" ajax="false"
-						style="margin-left:10px;font-size:13px" />
+					<p:inputText id="searchText" value="#{homeBean.textSearch}" />
+					<p:commandButton value="Pesquisar" action="#{homeBean.search}"
+						ajax="false" style="margin-left:10px;font-size:13px" />
+					<p:commandButton value="Logout" ajax="false"
+						action="#{loginBean.logout}"
+						style="margin-left:10px;font-size:14px" />
 				</h:panelGrid>
 			</h:form>
 		</div>

@@ -1,8 +1,9 @@
-package mainClasses;
+package mainclasses;
+
+import com.google.common.base.Objects;
 
 /**
  * Classe responsavel pela representacao dos sons(musicas postadas pelos usuarios) no sistema. 
- *
  */
 public class Som {
 
@@ -46,16 +47,32 @@ public class Som {
 	public String getData() {
 		return data;
 	}
-
+	
 	public void setData(String data) {
 		this.data = data;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
+	
 	@Override
 	public String toString() {
 		return this.getLink();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if ((obj == null) || !(obj instanceof Som)) {
+			return false;
+		}
+
+		Som other = (Som) obj;
+		return Objects.equal(this.id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.id);
 	}
 }

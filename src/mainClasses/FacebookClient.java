@@ -1,6 +1,4 @@
-package mainClasses;
-
-import javax.servlet.http.HttpServletRequest;
+package mainclasses;
 
 public class FacebookClient {
 

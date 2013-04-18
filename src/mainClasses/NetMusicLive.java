@@ -1,32 +1,36 @@
-package mainClasses;
+package mainclasses;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import mainClasses.Sistema;
-import mainClasses.Som;
-import mainClasses.Usuario;
-
+import tiposordenacao.OrdenaFeedPrincipal;
+import tiposordenacao.SonsMaisFavoritadosSistema;
+import tiposordenacao.SonsMaisFavoritadosUsuario;
+import tiposordenacao.SonsMaisRecentes;
 import tiposordenacao.TipoFeedPrincipal;
+import util.Utilitario;
 
 /**
- * Classe responsavel pela representacao do sistema e pela chamada das principais acoes.
- *
+ * Classe que representa as principais acoes do Sistema.
+ * 
  */
 public class NetMusicLive implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Sistema sistema;
+	private GerenciaSessao gerenciaSessao;
+	private Gerenciador gerenciador;
+	private OrdenaFeedPrincipal feedPrincipal;
 	private static NetMusicLive netMusicLive;
 
-
 	private NetMusicLive() {
-		sistema = new Sistema();
+		zerarSistema();
 	}
 
 	/**
-	 * Recupera a instancia de {@link NetMusicLive}. Caso seja null, uma intancia e criada.
-
+	 * Recupera a instancia de {@link NetMusicLive}. Caso seja null, uma
+	 * intancia e criada.
+	 * 
 	 * @return Instancia de Sistema.
 	 */
 	public static NetMusicLive getInstance() {
@@ -36,295 +40,510 @@ public class NetMusicLive implements Serializable {
 		return netMusicLive;
 	}
 
-
 	/**
-	 * Metodo que inicializa e limpa o sistema.
+	 * Todos os dados do sistema é zerado. Utilizado também para instaciar as
+	 * principais classes de gerencia.
 	 */
 	public void zerarSistema() {
-		sistema.zerarSistema();
+		gerenciaSessao = new GerenciaSessao();
+		gerenciador = new Gerenciador();
+		feedPrincipal = new SonsMaisRecentes();
 	}
 
 	/**
-	 * Metodo que executa a criacao de um novo usuario no sistema. 
-	 *  
-	 * @param login
-	 * 			Login do usuario a ser adicionado.
-	 * @param senha
-	 * 			Senha do usuario a ser adicinado.
-	 * @param nome
-	 * 			Nome do usuario a ser adicionado.
-	 * @param email
-	 * 			Email do usuario a ser adicionado.
-	 * @throws Exception
-	 * 			{@link LoginInvalidoException, NomeInvalidoException, EmailInvalidoException, 
-	 * 			LoginDuplicadoException, EmailDuplicadoException}
-	 */
-	public void criarUsuario(String login, String senha, String nome,
-			String email) throws Exception {
-		this.sistema.criarUsuario(login, senha, nome, email);
-	}
-
-	/**
-	 * Da inicio a uma sessao.
+	 * Cria um novo usuario.
 	 * 
 	 * @param login
 	 *            Login do usuario.
 	 * @param senha
 	 *            Senha do usuario.
-	 * @return Id da sessao.
+	 * @param nome
+	 *            Nome do usuario.
+	 * @param email
+	 *            Email do usuario.
 	 * @throws Exception
-	 * 			  {@link LoginInvalidoException, UsuarioInexistenteException}
+	 *             Login, nome ou email inválidos (ou seja null ou ""). Login ou
+	 *             email ja existente.
 	 */
-	public String abrirSessao(String login, String senha) throws Exception {
-		return sistema.abrirSessao(login, senha);
+	public void criarUsuario(String login, String senha, String nome,
+			String email) {
+		if (!Utilitario.elementIsValid(login)) {
+			throw new IllegalArgumentException("Login inválido");
+
+		} else if (!Utilitario.elementIsValid(nome)) {
+			throw new IllegalArgumentException("Nome inválido");
+
+		} else if (!Utilitario.elementIsValid(email)) {
+			throw new IllegalArgumentException("Email inválido");
+
+		} else {
+			if (gerenciador.existeLoginUsuario(login)) {
+				throw new IllegalArgumentException("Já existe um usuário com este login");
+			}
+			if (gerenciador.existeEmailUsuario(email)) {
+				throw new IllegalArgumentException("Já existe um usuário com este email");
+			}
+			gerenciador.criarUsuario(login, senha, nome, email);
+		}
 	}
 
-	/** Metodo que recebe o login de um determinado Usuario e retorna o valor do atributo especificado
-	 * no segundo parametro.
+	/**
+	 * Verifica se o login e senha correspondente existem no sistema.
 	 * 
 	 * @param login
-	 * 			Login do usuario a ser pesquisado.
-	 * @param atributo
-	 * 			Atributo a ser pesquisado (nome, email ou id).
-	 * @return O valor do atributo.
-	 * @throws Exception
-	 * 			{@link AtributoInvalidoException, LoginInvalidoException, UsuarioInexistenteException, 
-	 * 			AtributoInexistenteException}
+	 *            Login a ser pesquisado.
+	 * @param senha
+	 *            Senha a ser pesquisada.
+	 * @return true, caso o existam.
 	 */
-	public String getAtributoUsuario(String login, String atributo) throws Exception {
-		return sistema.getAtributoUsuario(login, atributo);
-	}
-
-	/**
-	 * Retorna o perfil musical.
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @return	Lista de som correspondente ao perfil musical.
-	 * @throws Exception 
-	 */
-	public List<Som> getPerfilMusical(String idsessao) throws Exception {
-		return sistema.getPerfilMusical(idsessao);
-	}
-
-	/**
-	 * Simula a acao do usuario postar um novo som. 
-	 * 
-	 * @param user
-	 * 			Usuario que esta postando o som.
-	 * @param link
-	 * 			Link do som que esta sendo postado.
-	 * @param dataCriacao
-	 * 			Data da postagem.
-	 * @return O id do som adicionado.
-	 * @throws Exception
-	 * 			{@link SomInvalidoException, DataInvalidaException}
-	 */
-	public String postarSom(String sessao, String link, String dataCriacao) throws Exception{
-		return sistema.postarSom(sessao, link, dataCriacao);
-	}
-
-	/**
-	 * Retorna o valor do atributo do idsom passado como parametro.
-	 * 
-	 * @param idSom
-	 * 			Id do som que deseja-se saber o valor do atributo.
-	 * @param atributo
-	 * 			Atributo que deseja-se saber o valor.
-	 * @return Valor correspondente ao atributo.
-	 * @throws Exception {@link SomInvalidoException, AtributoInvalidoException, AtributoInexistenteException}
-	 */
-	public String getAtributoSom(String idSom, String atributo) throws Exception {
-		return sistema.getAtributoSom(idSom, atributo);
-	}
-
-	/**
-	 * Simula a acao de um usuario seguir outro usuario.
-	 * 
-	 * @param seguidor
-	 * 				Usuario ativo da acao.
-	 * @param seguido
-	 * 				Usuario passivo da acao.
-	 * @throws Exception {@link LoginInvalidoException, LoginInexistenteException}
-	 */
-	public void seguirUsuario(String idSessaoSeguidor, String loginSeguido) throws Exception {
-		sistema.seguirUsuario(idSessaoSeguidor, loginSeguido);
-	}
-
-	/**
-	 * Retorna a lista de seguidores.
-	 * 
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @return Lista de Usuarios correspondente a lista de seguidores.
-	 * @throws Exception 
-	 * 				{@link SessaoInvalidaException, SessaoInexistenteException}
-	 */
-	public List<Usuario> getListaDeSeguidores(String idsessao) throws Exception {
-		return sistema.getListaDeSeguidores(idsessao);
-	}
-
-	/**
-	 * Metodo que retorna o numero de seguidores.
-	 * 
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @return Tamanho da lista de seguidores.
-	 * @throws Exception 
-	 *				{@link SessaoInvalidaException, SessaoInexistenteException}
-	 */
-	public int getNumeroDeSeguidores(String idsessao) throws Exception {
-		return sistema.getNumeroDeSeguidores(idsessao);
-	}
-
-	/**
-	 * Retorna as fontes de som.
-	 * @param idsessao
-	 * 			Id da sessao.
-	 * @return Lista de Usuarios correspondente as fontes de som.
-	 * @throws Exception
-	 * 			{@link SessaoInvalidaException, SessaoInexistenteException}
-	 */
-	public List<Usuario> getFontesDeSons(String idsessao) throws Exception {
-		return sistema.getFontesDeSons(idsessao);
-	}
-
-	/**
-	 * Metodo que retorna o id de uma determinado usuario a partir do
-	 * identificador de uma sessao.
-	 * 
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @return O Id do usuario correspondete.
-	 * @throws Exception
-	 * 			{@link SessaoInvalidaException, SessaoInexistenteException}
-	 */
-	public String getIDUsuario(String idsessao) throws Exception {
-		return sistema.getIDUsuario(idsessao);
-	}
-
-	/**
-	 * Recupera a visao de sons.
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @return Lista de Sons da visao de sons da sessao correspondente.
-	 * @throws Exception
-	 * 				{@link SessaoInvalidaException, SessaoInexistenteException}
-	 */
-	public List<Som> getVisaoDosSons(String idsessao) throws Exception {
-		return sistema.getVisaoDosSons(idsessao);
-	}
-
-	/**
-	 * Retorna os sons favoritos da sessao correspondente.
-	 * 
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @return Lista de Sons correspondente aos sons favoritos.
-	 * @throws Exception
-	 * 			    {@link SessaoInvalidaException, SessaoInexistenteException}
-	 */
-	public List<Som> getSonsFavoritos(String idsessao) throws Exception {
-		return sistema.getSonsFavoritos(idsessao);
-	}
-
-	/**
-	 * Retorna o feed extra da sessao correspondente.
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @return Lista de Sons correspondente ao feed extra.
-	 * @throws Exception
-	 * 				   {@link SessaoInvalidaException, SessaoInexistenteException}
-	 */
-	public List<Som> getFeedExtra(String idsessao) throws Exception {
-		return sistema.getFeedExtra(idsessao);
-	}
-
-	/**
-	 * Simula a acao de um usuario favoritar um som.
-	 * @param idsessao
-	 * 				Id sessao do usuario autor da acao.
-	 * @param idsom
-	 * 				Id do som a ser favoritado.
-	 * @throws Exception
-	 * 				{@link SessaoInvalidaException, SessaoInexistenteException, SomInvalidoException,  SomInexistenteException}
-	 */
-	public void favoritarSom(String idsessao, String idsom) throws Exception {
-		sistema.favoritarSom(idsessao, idsom);
-	}
-
-	/**
-	 * Retorna o feed principal da sessao correspondente.
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @return Lista de som do feed principal.
-	 * @throws Exception
-	 * 				{@link SessaoInvalidaException, SessaoInexistenteException}
-	 */
-	public List<Som> getMainFeed(String idsessao) throws Exception {
-		return sistema.getMainFeed(idsessao);
-	}
-
-	public List<Som> getMainFeedComSonsDoUser(String idSessao) throws Exception{
-		return sistema.getMainFeedComSonsDoUser(idSessao);
+	public boolean verificaLoginESenha(String login, String senha) {
+		return gerenciador.verificaLoginESenha(login, senha);
 	}
 	
+	public List<Usuario> search(String textSearch) {
+		return this.gerenciador.search(textSearch);		
+	}
+
 	/**
-	 * Altera o tipo de ordenacao {@link TipoFeedPrincipal} do feed principal.
-	 * @param idsessao
-	 * 				Id da sessao.
-	 * @param rule	
-	 * 				A regra de ordenacao.
+	 * Uma nova sessao e criada.
+	 * 
+	 * @param login
+	 *            Login do usuario dono da sessao.
+	 * @param senha
+	 *            Senha do usuario dono da sessao.
+	 * @return O id da sessao.
 	 * @throws Exception
-	 * 				{@link RegraInvalidaException, RegraInexistenteException, SessaoInvalidaException, SessaoInexistenteException}
+	 *             Login invalido (ou seja, null ou ""). Login e senha
+	 *             incompativeis. Login de usuario inexistente.
+	 */
+	public String abrirSessao(String login, String senha) {
+		if (!Utilitario.elementIsValid(login)) {
+			throw new IllegalArgumentException("Login inválido");
+
+		} else if (gerenciador.existeLoginUsuario(login)) {
+
+			if (!verificaLoginESenha(login, senha)) {
+				throw new IllegalArgumentException("Login inválido");
+			}
+			return gerenciaSessao.abrirSessao(login, senha);
+
+		} else {
+			throw new RuntimeException("Usuário inexistente");
+		}
+	}
+
+	/**
+	 * Verifica se a sessao em questao existe.
+	 * 
+	 * @param login
+	 *            Login do usuario dono da sessao.
+	 * @return true, no caso de exitir.
+	 */
+	public boolean existeSessao(String login) {
+		String idsessao = "sessao" + login;
+		return gerenciaSessao.existeSessao(idsessao);
+	}
+
+	/**
+	 * Retorna o atributo desejado de um usuario.
+	 * 
+	 * @param login
+	 *            Login do usuario em que se deseja saber um atributo.
+	 * @param atributo
+	 *            Atributo desejado, podendo ser: login, nome, email ou id.
+	 * @return O valor do atributo.
+	 * @throws Exception
+	 *             Atributo ou login invalidos (ou seja, null ou ""). Login ou
+	 *             atributo inexistentes.
+	 */
+	public String getAtributoUsuario(String login, String atributo)
+			throws Exception {
+		if (!Utilitario.elementIsValid(atributo)) {
+			throw new IllegalArgumentException("Atributo inválido");
+
+		} else if (!Utilitario.elementIsValid(login)) {
+			throw new IllegalArgumentException("Login inválido");
+
+		} else if (!this.gerenciador.existeLoginUsuario(login)) {
+			throw new IllegalArgumentException("Usuário inexistente");
+
+		} else {
+			String result = this.gerenciador
+					.getAtributoUsuario(login, atributo);
+			if (!result.isEmpty()) {
+				return result;
+			}
+		}
+		throw new IllegalArgumentException("Atributo inexistente");
+	}
+
+	/**
+	 * Retorna o perfil musical do usuario correspondente ao idsessao.
+	 * 
+	 * @param idsessao
+	 *            ID da sessao.
+	 * @return Lista dos sons postados pelo usuario.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 * 
+	 */
+	public List<Som> getPerfilMusical(String idsessao) throws Exception {
+		return gerenciador.getPerfilMusical(gerenciaSessao.getLogin(idsessao));
+	}
+
+	/**
+	 * Acao do usuario de postar um novo som.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao do usuario.
+	 * @param link
+	 *            Link do som.
+	 * @param dataCriacao
+	 *            Data de criacao do som.
+	 * @return ID do som postado.
+	 * @throws Exception
+	 *             Link invalido (ou seja, null ou ""). Data invalida.
+	 */
+	public String postarSom(String idSessao, String link, String dataCriacao)
+			throws Exception {
+		if (!Utilitario.elementIsValid(link)) {
+			throw new IllegalArgumentException("Som inválido");
+
+		} else if (!Utilitario.dataIsValida(dataCriacao)) {
+			throw new IllegalArgumentException("Data de Criação inválida");
+		}
+
+		return gerenciador.postarSom(gerenciaSessao.getLogin(idSessao), link,
+				dataCriacao);
+	}
+
+	/**
+	 * Retorna o atributo desejado de um som.
+	 * 
+	 * @param idSom
+	 *            ID do som em questao.
+	 * @param atributo
+	 *            Atributo desejado.
+	 * @return O valor do atributo.
+	 * @throws Exception
+	 *             ID do som ou atributo invalidos (ou seja, null ou "").
+	 *             Atributo inexistente.
+	 */
+	public String getAtributoSom(String idSom, String atributo)
+			throws Exception {
+		if (!Utilitario.elementIsValid(idSom)) {
+			throw new IllegalArgumentException("Som inválido");
+		} else if (!Utilitario.elementIsValid(atributo)) {
+			throw new IllegalArgumentException("Atributo inválido");
+		}
+
+		String valorAtributo = gerenciador.getAtributoSom(idSom, atributo);
+		if (!valorAtributo.isEmpty()) {
+			return valorAtributo;
+		}
+		throw new IllegalArgumentException("Atributo inexistente");
+	}
+
+	/**
+	 * Acao de um usuario seguir outro.
+	 * 
+	 * @param idSessaoSeguidor
+	 *            ID do usuario seguidor.
+	 * @param loginSeguido
+	 *            Login do usuario a ser seguido.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente. Login do seguido invalido ou
+	 *             inexistente. Seguidor e seguido serem o mesmo usuario.
+	 */
+	public void seguirUsuario(String idSessaoSeguidor, String loginSeguido)
+			throws Exception {
+		String loginSeguidor = gerenciaSessao.getLogin(idSessaoSeguidor);
+
+		if (!Utilitario.elementIsValid(loginSeguido)) {
+			throw new IllegalArgumentException("Login inválido");
+
+		} else if (loginSeguidor.equals(loginSeguido)) {
+			throw new IllegalArgumentException("Login inválido");
+		}
+
+		if (gerenciador.existeLoginUsuario(loginSeguido)) {
+			gerenciador.seguirUsuario(loginSeguidor, loginSeguido);
+
+		} else {
+			throw new RuntimeException("Login inexistente");
+		}
+	}
+
+	/**
+	 * Retorna a lista de seguidores de um usuario.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @return Lista de usuarios seguidores.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 */
+	public List<Usuario> getListaDeSeguidores(String idSessao) throws Exception {
+		return gerenciador.getListaSeguidoresUsuario(gerenciaSessao
+				.getLogin(idSessao));
+	}
+
+	/**
+	 * Retorna o numero de seguidores de um usuario.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @return O numero de seguidores.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 */
+	public int getNumeroDeSeguidores(String idSessao) throws Exception {
+		return getListaDeSeguidores(idSessao).size();
+	}
+
+	/**
+	 * Retorna as fontes de um usuario.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @return Lista das fontes.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 * 
+	 */
+	public List<Usuario> getFontesDeSons(String idSessao) throws Exception {
+		return gerenciador.getFontesSomUsuario(gerenciaSessao
+				.getLogin(idSessao));
+	}
+
+	/**
+	 * Retorna o ID do usuario.
+	 * 
+	 * @param idsessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @return ID do usuario.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 */
+	public String getIDUsuario(String idsessao) throws Exception {
+		return gerenciador.getAtributoUsuario(
+				gerenciaSessao.getLogin(idsessao), "id");
+	}
+
+	/**
+	 * Retorna a visao dos sons do usuario.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @return Lista das visoes.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 */
+	public List<Som> getVisaoDosSons(String idSessao) throws Exception {
+		return gerenciador.getVisaoSonsUsuario(gerenciaSessao
+				.getLogin(idSessao));
+	}
+
+	/**
+	 * Retorna os sons favoritos do usuario.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @return Lista com sons favoritos.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 */
+	public List<Som> getSonsFavoritos(String idSessao) throws Exception {
+		return gerenciador.getSonsFavoritosUsuario(gerenciaSessao
+				.getLogin(idSessao));
+	}
+
+	/**
+	 * Retorna o feed extra do usuario.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @return Feed extra.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 */
+	public List<Som> getFeedExtra(String idSessao) throws Exception {
+		return gerenciador.getFeedExtraUsuario(gerenciaSessao
+				.getLogin(idSessao));
+	}
+
+	/**
+	 * Retorna o feed principal do usuario.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @return Lista das visoes.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente.
+	 */
+	public List<Som> getMainFeed(String idSessao) throws Exception {
+		return feedPrincipal.ordena(getFontesDeSons(idSessao),
+				getSonsFavoritos(idSessao));
+	}
+	
+	public List<Som> getMainFeedComSonsDoUser(String idSessao) throws Exception { 
+		List<Usuario> listAuxiliar = new ArrayList<Usuario>();
+		Usuario user = gerenciador.getUsuario(gerenciaSessao.getLogin(idSessao), "login");
+		listAuxiliar.add(user);
+		
+		List<Som> sons = feedPrincipal.ordena(listAuxiliar,getMainFeed(idSessao));
+		return sons;
+	}
+
+	/**
+	 * Acao do usuario de favoritar um som.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @param idSom
+	 *            ID do som a ser favoritado.
+	 * @throws Exception
+	 *             ID do som invalido ou inexistente. Sessao inexitente ou
+	 *             invalida.
+	 */
+	public void favoritarSom(String idSessao, String idSom) throws Exception {
+		if (!Utilitario.elementIsValid(idSom)) {
+			throw new IllegalArgumentException("Som inválido");
+		}
+
+		if (!gerenciador.favoritarSom(gerenciaSessao.getLogin(idSessao), idSom)) {
+			throw new RuntimeException("Som inexistente");
+		}
+	}
+
+	/**
+	 * Altera o tipo da ordenacao do feed principal do usuairo.
+	 * 
+	 * @param idsessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @param rule
+	 *            Tipo da ordenacao.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente. Regra invalida ou
+	 *             inexistente.
 	 */
 	public void setMainFeedRule(String idsessao, String rule) throws Exception {
-		sistema.setMainFeedRule(idsessao, rule);
+		gerenciaSessao.verificaSessao(idsessao);
+		if (!Utilitario.elementIsValid(rule)) {
+			throw new IllegalArgumentException("Regra de composição inválida");
+		}
+
+		if (rule.equals(TipoFeedPrincipal.SONS_RECENTES.toString())) {
+			feedPrincipal = new SonsMaisRecentes();
+
+		} else if (rule.equals(TipoFeedPrincipal.SONS_FAVORITADOS_SISTEMA
+				.toString())) {
+			feedPrincipal = new SonsMaisFavoritadosSistema();
+
+		} else if (rule.equals(TipoFeedPrincipal.SONS_FAVORITADOS_USUARIO
+				.toString())) {
+			feedPrincipal = new SonsMaisFavoritadosUsuario();
+
+		} else {
+			throw new RuntimeException("Regra de composição inexistente");
+		}
 	}
 
 	/**
-	 * Encerra a sessao do login correspondente.
+	 * Encerra uma sessao.
+	 * 
 	 * @param login
-	 * 			Login do usuario cuja sessao sera encerrada.
+	 *            Login do usuario que terá a sessao encerrada.
 	 */
 	public void encerrarSessao(String login) {
-		sistema.encerrarSessao(login);
+		gerenciaSessao.encerrarSessao("sessao" + login);
 	}
 
 	/**
-	 * Metodo que ao ser chamado finaliza o sistema.
+	 * Encerra o sistema.
 	 */
 	public void encerrarSistema() {
 
 	}
-	
+
 	/**
-	 * Verifica se existe sessao vinculada ao login passado como parametro.
-	 * @param login
-	 * 			Login do usuario.
-	 * @return true se existir, false caso contraio.
+	 * Acao do usuario criar uma lista personalizada de usuarios.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario em questao.
+	 * @param nomeLista
+	 *            Nome da lista a ser criada.
+	 * @return ID da lista criada.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente. Nome invalido ou já
+	 *             existente.
 	 */
-	public boolean existeSessao(String login) {
-		return sistema.existeSessao(login);
+	public String criarLista(String idSessao, String nomeLista)
+			throws Exception {
+		String login = gerenciaSessao.getLogin(idSessao);
+		if (!Utilitario.elementIsValid(nomeLista)) {
+			throw new Exception("Nome inválido");
+		}
+		String idLista = gerenciador.criarLista(login, nomeLista);
+
+		if (!Utilitario.elementIsValid(idLista)) {
+			throw new Exception("Nome já escolhido");
+		}
+		return idLista;
+	}
+
+	/**
+	 * Adiciona um usuario a uma lista personalizada.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario dono da lista
+	 *            personalizada.
+	 * @param idLista
+	 *            ID da lista.
+	 * @param idUsuario
+	 *            ID do usuario que será adicionado.
+	 * @throws Exception
+	 *             Sessao inexistente ou invalida. Usuario invalido ou ja
+	 *             existente. Lista invalida. Usuario não pode adicionar-se a
+	 *             propria lista.
+	 */
+	public void adicionarUsuario(String idSessao, String idLista,
+			String idUsuario) throws Exception {
+		gerenciador.adicionaUsuario(gerenciaSessao.getLogin(idSessao), idLista,
+				idUsuario);
+	}
+
+	/**
+	 * Retorna os sons de uma lista personalizada.
+	 * 
+	 * @param idSessao
+	 *            ID da sessao correspondente ao usuario dono da lista
+	 * @param idLista
+	 *            ID da lista.
+	 * @return Lista contendo os sons.
+	 * @throws Exception
+	 *             Sessao invalida ou inexistente. Lista invalida.
+	 */
+	public List<Som> getSonsEmLista(String idSessao, String idLista)
+			throws Exception {
+		List<Som> sons = gerenciador.getSonsEmLista(
+				gerenciaSessao.getLogin(idSessao), idLista);
+		if (sons == null) {
+			throw new Exception("Lista inválida");
+		}
+		return sons;
 	}
 	
-	/** Metodo que verifica se o login e senha passados correspodem ao login e senha de algum 
-	 * Usuario do sistema.
-	 * 
-	 * @param login
-	 * 			Login a ser pesquisado.
-	 * @param senha
-	 * 			Senha a ser pesquisada.
-	 * @return true caso login e senha correspodente existam no sistema, false caso contrario.
-	 */
-	public boolean verificaLoginESenha(String login, String senha) {
-		return sistema.verificaLoginESenha(login, senha);
+	public int getNumFontesEmComum(String idSessao, String idUsuario) throws Exception {
+		return gerenciador.getNumFontesEmComum(gerenciaSessao.getLogin(idSessao),idUsuario);
+		
 	}
-
-	public List<Usuario> search(String textSearch) {
-		return this.sistema.search(textSearch);		
+	
+	public int getNumFavoritosEmComum(String idSessao, String idUsuario) throws Exception {
+		return gerenciador.getNumFavoritosEmComum(gerenciaSessao.getLogin(idSessao), idUsuario);
 	}
-
-	public List<Som> perfilMusicalUserSelected(String nameUserSelected) {
-		return this.sistema.perfilMusicalUserSelected(nameUserSelected);
+	
+	public List<Usuario> getFontesDeSonsRecomendadas(String idSessao) throws Exception {
+		return gerenciador.getFontesDeSonsRecomendadas(gerenciaSessao.getLogin(idSessao));
 	}
 }

@@ -7,17 +7,16 @@ import util.InterfaceWebAdapter;
 public class DefaultBean {
 
 	protected InterfaceWebAdapter interfaceWebAdapter;
-	protected String login, senha;
+	protected String login,senha;
 
-	public DefaultBean() {
+	public DefaultBean(){
 		interfaceWebAdapter = InterfaceWebAdapter.getInstance();
 	}
 
 	protected void putInSession(String key, Object value) {
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-				.put(key, value);
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(key, value);
 	}
-
+	
 	public String getSenha() {
 		return senha;
 	}
