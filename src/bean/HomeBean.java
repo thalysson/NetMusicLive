@@ -5,10 +5,13 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 
-import util.Menssagens;
-
 import mainclasses.Som;
 import mainclasses.Usuario;
+import mainclasses.UsuarioSelecionavel;
+
+import org.primefaces.event.SelectEvent;
+
+import util.Menssagens;
 
 @ManagedBean
 public class HomeBean extends DefaultBean {
@@ -16,10 +19,14 @@ public class HomeBean extends DefaultBean {
 	private String mensagemDePostagem, idsessao, fotoUser;
 	private final String caminhoFotoPadrao = "estilo/images/users/default.png";
 	private String textSearch;
-	private List<Usuario> searchResults;
+	
+	private UsuarioSelecionavel searchResults;
 
 	private String fotoUserSelected, nameUserSelected;
 
+	private Usuario usuarioSelecionado;
+	
+	
 	private String media = "http://www.youtube.com/v/KZnUr8lcqjo";
 
 	public HomeBean() {
@@ -86,19 +93,16 @@ public class HomeBean extends DefaultBean {
 
 	public String search() {
 		if (!getTextSearch().equals(null)) {
-			setSearchResults(this.interfaceWebAdapter.search(getTextSearch()));
+			this.searchResults = new UsuarioSelecionavel(this.interfaceWebAdapter.search(getTextSearch()));
+			//this.searchResults2 = this.interfaceWebAdapter.search(getTextSearch());
 			return "searchpage?faces-redirect=false";
 		}
 		// printa mensagem de erro
 		return "homepage?faces-redirect=true";
 	}
 
-	public List<Usuario> getSearchResults() {
+	public UsuarioSelecionavel getSearchResults() {
 		return searchResults;
-	}
-
-	public void setSearchResults(List<Usuario> searchResults) {
-		this.searchResults = searchResults;
 	}
 
 	public String getTextSearch() {
@@ -109,6 +113,10 @@ public class HomeBean extends DefaultBean {
 		this.textSearch = textSearch;
 	}
 
+	public void carregaUsuarioSelecionado(SelectEvent event){
+
+	}
+	
 	public String getFotoUserSelected() {
 		return fotoUserSelected;
 	}
@@ -124,4 +132,15 @@ public class HomeBean extends DefaultBean {
 	public void setNameUserSelected(String nameUserSelected) {
 		this.nameUserSelected = nameUserSelected;
 	}
+
+	public Usuario getUsuarioSelecionado() {
+		return usuarioSelecionado;
+	}
+
+	public void setUsuarioSelecionado(Usuario usuarioSelecionado) {
+		System.out.println();
+		System.out.println("tipo de object: "+usuarioSelecionado);
+		//this.usuarioSelecionado = usuarioSelecionado;
+	}
+
 }

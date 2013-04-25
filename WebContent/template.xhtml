@@ -14,54 +14,75 @@
 	<meta name="description"
 		content="Trabalho para projeto da disciplina Sistemas de Informação
 	1 do curso Ciência da Computação da UFCG." />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
 	<title>NetMusicLive</title>
 	<link rel="stylesheet" href="estilo/reset.css" type="text/css" />
 	<link rel="stylesheet" href="estilo/default.css" type="text/css" />
 </h:head>
 
 <h:body>
+
+	<ui:insert name="SubCabecalho"/>
+	
 	<div id="container">
-		<div id="header">
-			<div>
-				<h:form id="formLogin">
-					<h:panelGrid columns="1">
-						<h:panelGrid columns="3" id="form">
-							<h6 id="textLogin">Login:</h6>
-							<p:inputText id="inputLogin" value="#{loginBean.login}"
-								required="true" />
-							<p:commandButton id="botaoLogin" action="#{loginBean.logar}"
-								ajax="false" style="margin-left: 20px" value="Login" />
-							<h5 id="textSenha">Senha:</h5>
-							<p:password value="#{loginBean.senha}" rendered="true"
-								update="formLogin" />
+	<!-- Abrindo Cabecalho -->
+		<ui:insert name="CabecalhodaPagina">
+			<div id="header">
+				<div>
+					<h:form id="formLogin">
+						<h:panelGrid columns="1">
+							<h:panelGrid columns="3" id="form">
+
+								<!-- Campo de Login -->
+								<h6 id="textLogin">Login:</h6>
+								<p:inputText id="inputLogin" value="#{loginBean.login}"
+									required="true" requiredMessage="Insira seu Login!" />
+
+								<p:commandButton id="botaoLogin" action="#{loginBean.logar}"
+									ajax="false" style="margin-left: 20px" value="Login" />
+
+								<!-- Campo de Senha -->
+								<h5 id="textSenha">Senha:</h5>
+								<p:password value="#{loginBean.senha}" rendered="true"
+									required="true" requiredMessage="Insira sua Senha!"
+									update="formLogin" />
+							</h:panelGrid>
+
+							<!-- Login com Facebook -->
+							<h:outputLink value="#{loginController.conectarComFace()}"
+								style="margin-left: 50px">
+								<p:graphicImage url="estilo/images/facebook.png" width="160px" />
+							</h:outputLink>
+
+							<!-- Componente que exibe Mensagens de Erro -->
+							<p:growl id="growl" showDetail="true" sticky="true" />
 						</h:panelGrid>
-						<h:outputLink value="#{loginController.conectarComFace()}"
-							style="margin-left: 50px">
-							<p:graphicImage url="estilo/images/facebook.png" width="160px" />
-						</h:outputLink>
-						<p:growl id="growl" showDetail="true" sticky="true" />
-					</h:panelGrid>
-				</h:form>
+					</h:form>
+				</div>
+
+				<div id="slogan">
+					<h1>
+						<a href="index.jsf">NetMusicLive</a>
+					</h1>
+					<p:graphicImage url="estilo/images/logo.png"></p:graphicImage>
+					<p>Projeto da disciplina Sistemas de Informação do curso
+						Ciência da Computação da UFCG.</p>
+				</div>
 			</div>
+			
+			<!-- Fechando Cabecalho -->
+		</ui:insert>
 
-			<div id="slogan">
-				<h1>
-					<a href="index.jsf">NetMusicLive</a>
-				</h1>
-				<p:graphicImage url="estilo/images/logo.png"></p:graphicImage>
-				<p>Projeto da disciplina Sistemas de Informação do curso Ciência
-					da Computação da UFCG.</p>
-			</div>
 
-		</div>
-
+		<!-- Parte Central da pagina -->
 		<div id="main">
-			<ui:insert name="conteudoCentral"></ui:insert>
-
+			<ui:insert name="conteudoCentral" />
 		</div>
 
 	</div>
 
+
+	<!-- Rodapé da página -->
 	<div id="footerWrap">
 
 		<div id="footer">

@@ -9,7 +9,9 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="template.xhtml">
+
 	<ui:define name="conteudoCentral">
+
 		<div id="formResgister">
 			<h:form id="regForm">
 				<p:growl id="growl" showDetail="true" sticky="true" />
@@ -27,7 +29,8 @@
 					<p:inputText value="#{registerBean.email}" />
 
 					<h6 id="textRegisterSenha">Senha:</h6>
-					<p:password value="#{registerBean.senha}"></p:password>
+					<p:password value="#{registerBean.senha}" required="true"
+						requiredMessage="Insira uma senha!" />
 
 					<br></br>
 					<p:commandButton value="Cadastre-se" ajax="false"
@@ -35,6 +38,9 @@
 				</h:panelGrid>
 			</h:form>
 		</div>
+
 	</ui:define>
+
 </ui:composition>
+
 </html>

@@ -87,7 +87,7 @@ a:hover {
 blockquote {
 	background: #ebe7e4;
 	color: #7f6357;
-	padding: 23px;
+	padding: 20px;
 	font: italic 20px/27px georgia;
 }
 
@@ -107,7 +107,7 @@ blockquote p {
 	border-left: 60px solid #f7f5f4;
 	border-right: 10px solid #f7f5f4;
 	position: absolute;
-	right: 30px;
+	right: 90px;
 }
 
 #container {
@@ -126,6 +126,13 @@ body#subpage #container {
 #subHeader{
 	text-align: left;
 	left: 10px;
+	position: absolute;
+}
+
+#logout{
+	right: 50px;
+	top:10px;
+	font-size: 14px;
 	position: absolute;
 }
 
@@ -203,7 +210,7 @@ body#subpage #container {
 
 /* MAIN CONTENT */
 #main {
-	padding: 0 36px 100px 350px;
+	padding: 0 36px 100px 200px;
 	overflow: hidden;
 	border-left: 1px solid white;
 	border-right: 1px solid white;
@@ -248,6 +255,7 @@ body.single #main #primaryContent {
 	float: right;
 	width: 249px;
 	padding-top: 45px;
+	padding-right: 60px;
 	position: relative;
 }
 
@@ -255,7 +263,6 @@ body.single #main #primaryContent {
 	font-size: 12px;
 	color: #2f231e;
 	float: right;
-	padding-right: 10px;
 	padding-top: 35px;
 	line-height: 10px;
 	display: block;
