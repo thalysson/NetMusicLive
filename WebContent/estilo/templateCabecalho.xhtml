@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC
+	 "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/
+	 xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="template.xhtml">
+
+	<!-- Definindo Conteudo que fica acima do cabecalho 
+	     que são: pequena logo do sistema e o botão de logout
+	-->
+	<ui:define name="SubCabecalho">
+		<div id="subHeader">
+			<p:graphicImage url="/images/smallLogo.png" />
+		</div>
+
+		<div id="logout">
+			<h:form id="form_Logout">
+				<p:commandButton value="Logout" ajax="false"
+					action="#{loginBean.logout}" />
+			</h:form>
+		</div>
+	</ui:define>
+
+
+
+	<!-- Definindo Conteudo do Cabecalho da pagina 
+	     Onde fica localizado a imagem de perfil do usuario e o campo de busca.
+	     Alem de informacoes do usuario.
+	-->
+	<ui:define name="CabecalhodaPagina">
+		
+		<p:graphicImage url="/images/smallLogoName.png" />
+
+		<div id="formSearch">
+			<h:form>
+				<h:panelGrid columns="3">
+					<p:inputText id="searchText" value="#{homeBean.textSearch}" />
+					<p:commandButton value="Pesquisar" action="#{homeBean.search}"
+						ajax="false" style="margin-left:10px;font-size:13px" />
+
+				</h:panelGrid>
+			</h:form>
+		</div>
+
+		<div id="userPhoto">
+		<h:form>
+			<h:panelGrid columns="5">
+				<p:graphicImage url="#{homeBean.fotoUser}" />
+				<p>UserName</p>
+				<p:commandLink value="Minhas Listas"
+				style="color: #ffffff;padding-right:20px;"/>
+				<p:commandLink value="Meus Seguidores"
+				style="color: #ffffff;;padding-right:20px;"/>
+				<p:commandLink value="Recomendações"
+				style="color: #ffffff;"/>
+				
+				
+			</h:panelGrid>
+			</h:form>
+		</div>
+		<!-- Bacana depois colocar informacoes quanto ao numero de pessoas que seguem e tal... -->
+	</ui:define>
+
+</ui:composition>
+</html>
