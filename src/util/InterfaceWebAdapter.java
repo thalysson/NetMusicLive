@@ -63,7 +63,7 @@ public class InterfaceWebAdapter{
 		}
 	}
 	
-	public List<Usuario> search(String textSearch) {
+	public List<String> search(String textSearch) {
 		return this.netMusicLive.search(textSearch);
 	}
 	
@@ -81,5 +81,9 @@ public class InterfaceWebAdapter{
 		}catch(Exception e){}
 		
 		return nomeUsuarios;
+	}
+
+	public String getNomeUser(String idUser) {
+		return this.netMusicLive.getUsuario(idUser, "id").getNome(); 
 	}	
 }

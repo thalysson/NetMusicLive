@@ -8,13 +8,13 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="templateCabecalho.xhtml">
+<ui:composition template="/estilo/templateCabecalho.xhtml">
 
 	<!-- Definindo conteudo do centro da pagina
 		Local onde o usuario pode postar sons e ver os feeds e pessoas que ele segue...
 	 -->
 	<ui:define name="conteudoCentral">
-		
+
 		<!-- Formulario para postar um som -->
 		<h:form>
 			<p:inputTextarea value="#{homeBean.mensagemDePostagem}" cols="50"
@@ -22,24 +22,27 @@
 
 			<div id="formPostagemMusica" style="margin-top: 5px;">
 				<p:commandButton value="Enviar" ajax="false"
-					action="#{homeBean.postarSom}"
-					style="font-size:14px" />
+					action="#{homeBean.postarSom}" style="font-size:14px" />
 
 				<p:commandButton value="Apagar" ajax="false"
 					action="#{homeBean.apagarMensagemDePostagem}"
 					style="margin-left:10px;font-size:14px" />
 			</div>
 		</h:form>
-		
+
 		<!-- Tabela MainFeed e tabela dos usuarios seguidos -->
+		
+		<h:panelGrid columns="2">
+		<h:column>
+		
 		<div id="feeds">
 			<h2>Feed Usuario</h2>
 			<p:dataTable id="MainFeed" var="som" value="#{homeBean.mainFeed}"
-				emptyMessage="Nenhum som">
-				<p:column>
+				emptyMessage="Nenhum som" rows="10"  >
+				<p:column width="200" resizable="false" >
 					<p:commandLink value="#{som.link}" />
 				</p:column>
-				<p:column>
+				<p:column resizable="false">
 					#{som.data}
 				</p:column>
 			</p:dataTable>
@@ -52,7 +55,20 @@
 			#{friend}
 			</p:column>
 			</p:dataTable>
-		</div>		
+			
+		</div>
+		</h:column>
+		
+		<h:column>
+		
+		<p:dataList >
+		
+		
+		</p:dataList>
+		
+		</h:column>
+		
+		</h:panelGrid>
 	</ui:define>
 
 </ui:composition>

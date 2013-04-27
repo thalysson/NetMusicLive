@@ -181,6 +181,26 @@ public class UserStoriesAdapter {
 		return retornaComChaves(fontesRecomendadas, "list");
 	}
 	
+	public void reiniciarSistema(){
+		
+	}
+	
+	/** Metodos que interagem com os sons e suas Tag */
+	
+	public String criarTag(String idsessao,String tag){
+		return null;
+	}
+	
+	public void adicionarTagASom(String idsessao,String tag,String idSom){
+		
+	}
+
+	public String getListaTagsEmSom(String idsessao, String idsom){
+		return null;
+	}
+
+	
+	
 	private String retornaComChaves(List<String> list, String formato) {
 		String retorno = "{";
 		int sizeList = list.size();

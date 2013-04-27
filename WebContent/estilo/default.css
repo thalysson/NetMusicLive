@@ -1,12 +1,12 @@
 body {
-	background: #eeebe9 url(images/bg.jpg) repeat-x;
+	background: #eeebe9 url(../images/bg.jpg) repeat-x;
 	text-align: center;
 	font-family: helvetica, arial, sans-serif;
 	line-height: 25px;
 }
 
 body#subpage {
-	background: #eeebe9 url(images/bg_alt.jpg) repeat-x;
+	background: #eeebe9 url(../images/bg_alt.jpg) repeat-x;
 }
 
 h1,h2,h3,h4,h5 {
@@ -116,11 +116,11 @@ blockquote p {
 	text-align: left;
 	position: relative;
 	padding-top: 0px;
-	background: #f7f5f4 url(images/containerBG.jpg) repeat-x;
+	background: #f7f5f4 url(../images/containerBG.jpg) repeat-x;
 }
 
 body#subpage #container {
-	background: #f7f5f4 url(images/containerBG_alt.jpg) repeat-x;
+	background: #f7f5f4 url(../images/containerBG_alt.jpg) repeat-x;
 }
 
 #subHeader{
@@ -137,9 +137,18 @@ body#subpage #container {
 }
 
 #userPhoto{
-	padding-top: 13px;
+	
+	padding-top: 8px;
 	padding-left: 20px;
 }
+
+
+#userPhoto p{
+	color: #ffffff;
+	padding-right:30px;
+	font-size: 50px;
+}
+
 
 /* THE LOGO */ 
 #slogan {
@@ -153,6 +162,7 @@ body#subpage #container {
 	font-size: 12px;
 }
 #formSearch{
+	
 	padding-top: 20px;
 	padding-left: 600px;
 }
@@ -169,7 +179,7 @@ body#subpage #container {
 
 #slogan h1 {
 	margin: 0 0 0 50px;
-	background: url(images/logoName.png) no-repeat;
+	background: url(../images/logoName.png) no-repeat;
 	width: 231px;
 	height: 70px;
 	position: relative;
@@ -216,6 +226,10 @@ body#subpage #container {
 	border-right: 1px solid white;
 }
 
+#main #feeds{
+	padding-right: 250px;
+}
+
 #container #main h2 {
 	padding-left: 0;
 }
@@ -236,15 +250,15 @@ body.single #main #primaryContent {
 }
 
 #primaryContent li#first h3 {
-	background: url(images/imageText.png) no-repeat 0 0;
+	background: url(../images/imageText.png) no-repeat 0 0;
 }
 
 #primaryContent li#second h3 {
-	background: url(images/imageText.png) no-repeat 0 -34px;
+	background: url(../images/imageText.png) no-repeat 0 -34px;
 }
 
 #primaryContent li#third h3 {
-	background: url(images/imageText.png) no-repeat 0 -68px;
+	background: url(../images/imageText.png) no-repeat 0 -68px;
 }
 
 #first p,#second p,#third p {
@@ -283,14 +297,18 @@ body.single #main #primaryContent {
 	color: #a68a7d;
 	width: 1002px;
 	margin: auto;
-	text-align: left;
-	font-size: 11px;
+	text-align: center;
+	font-size: 13px;
 	line-height: 17px;
 	padding-top: 35px;
-	text-transform: uppercase;
-	border-right: #574138; /* CHECK THIS */
+	border-right: #574138;
 	border-left: #574138;
 	overflow: hidden;
+}
+
+#footer #commandLink{
+	color: #a68a7d;
+	
 }
 
 #footer #footerLogo {

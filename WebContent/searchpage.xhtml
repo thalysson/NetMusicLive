@@ -9,7 +9,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="templateCabecalho.xhtml">
+<ui:composition template="/estilo/templateCabecalho.xhtml">
 
 	<ui:define name="conteudoCentral">
 		<div id="resultsPesquisa">
@@ -18,25 +18,37 @@
 					action="homepage?faces-redirect=false" ajax="false" />
 			</h:form>
 
-			<h:form>
+			<h:form id="form">
 
 				<h2>Resultados de Pesquisa</h2>
 
-				<p:dataTable id="TabelaResutadosDePesquisa"
-					value="#{homeBean.searchResults}" var="result"
-					rowKey="#{result}"
-					selection="#{homeBean.usuarioSelecionado}" selectionMode="single"
-					emptyMessage="Nenhum resultado para a pesquisa.">
+				<p:dataTable id="table" value="#{homeBean.searchResults}" var="id"
+				selectionMode="single" selection="#{homeBean.selectedUser}"
+				 rowKey="#{id}">
+				 
+				 <p:column>
+				 <h:outputText value="#{id}"/>
+				 </p:column>
 
-					<p:ajax event="rowSelect"
-						listener="#{homeBean.carregaUsuarioSelecionado}" />
-
-					<p:column>
-						#{result.nome}
-					</p:column>
-
+					<f:facet name="footer">
+						<p:commandLink value="Carregar Usuario Selecionado" update=":form:carDetail"
+							oncomplete="carDialog.show()"/>
+					</f:facet>
 				</p:dataTable>
 
+				<p:dialog header="Som selecionado" showEffect="fade"
+					hideEffect="fade" modal="true" widgetVar="carDialog">
+
+					<p:outputPanel id="carDetail" style="text-align:center;"
+						layout="block">
+
+						<h:panelGrid columns="1">
+							<h:outputText id="color"
+								value="texto: #{homeBean.selectedUser}" />
+						</h:panelGrid>
+					</p:outputPanel>
+
+				</p:dialog>
 
 
 			</h:form>

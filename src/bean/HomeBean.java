@@ -3,36 +3,36 @@ package bean;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import mainclasses.Som;
-import mainclasses.Usuario;
-import mainclasses.UsuarioSelecionavel;
-
-import org.primefaces.event.SelectEvent;
-
 import util.Menssagens;
 
 @ManagedBean
+@RequestScoped
 public class HomeBean extends DefaultBean {
 
 	private String mensagemDePostagem, idsessao, fotoUser;
-	private final String caminhoFotoPadrao = "estilo/images/users/default.png";
-	private String textSearch;
-	
-	private UsuarioSelecionavel searchResults;
-
-	private String fotoUserSelected, nameUserSelected;
-
-	private Usuario usuarioSelecionado;
-	
-	
+	private final String caminhoFotoPadrao = "/images/users/default.png";
 	private String media = "http://www.youtube.com/v/KZnUr8lcqjo";
+
+	// Search
+	private List<String> searchResults;
+	private String selectedUser;
+	private String textSearch;
 
 	public HomeBean() {
 		super();
 		setIDSession();
 		setMensagemDePostagem("Postagem de Mensagem..");
+	}
+
+	public String search() {
+		List<String> usersPesquisados = this.interfaceWebAdapter
+				.search(getTextSearch());
+		setSearchResults(usersPesquisados);
+		return "searchpage?faces-redirect=false";
 	}
 
 	private void setIDSession() {
@@ -61,8 +61,14 @@ public class HomeBean extends DefaultBean {
 		return this.interfaceWebAdapter.getNomesFontesDeSons(getIDSession());
 	}
 
-	public String getFotoUser() {
+	public void apagarMensagemDePostagem() {
+		setMensagemDePostagem("");
+	}
 
+	// Metodos Set's e Get's dos campos da classe.
+
+
+	public String getFotoUser() {
 		setFotoUser(caminhoFotoPadrao);
 		return fotoUser;
 	}
@@ -79,30 +85,12 @@ public class HomeBean extends DefaultBean {
 		this.mensagemDePostagem = mensagemDePostagem;
 	}
 
-	public void apagarMensagemDePostagem() {
-		setMensagemDePostagem("");
-	}
-
 	public String getMedia() {
 		return media;
 	}
 
 	public void setMedia(String media) {
 		this.media = media;
-	}
-
-	public String search() {
-		if (!getTextSearch().equals(null)) {
-			this.searchResults = new UsuarioSelecionavel(this.interfaceWebAdapter.search(getTextSearch()));
-			//this.searchResults2 = this.interfaceWebAdapter.search(getTextSearch());
-			return "searchpage?faces-redirect=false";
-		}
-		// printa mensagem de erro
-		return "homepage?faces-redirect=true";
-	}
-
-	public UsuarioSelecionavel getSearchResults() {
-		return searchResults;
 	}
 
 	public String getTextSearch() {
@@ -113,34 +101,20 @@ public class HomeBean extends DefaultBean {
 		this.textSearch = textSearch;
 	}
 
-	public void carregaUsuarioSelecionado(SelectEvent event){
-
-	}
-	
-	public String getFotoUserSelected() {
-		return fotoUserSelected;
+	public List<String> getSearchResults() {
+		return searchResults;
 	}
 
-	public void setFotoUserSelected(String fotoUserSelected) {
-		this.fotoUserSelected = fotoUserSelected;
+	public void setSearchResults(List<String> searchResults) {
+		this.searchResults = searchResults;
 	}
 
-	public String getNameUserSelected() {
-		return nameUserSelected;
+	public String getSelectedUser() {
+		return selectedUser;
 	}
 
-	public void setNameUserSelected(String nameUserSelected) {
-		this.nameUserSelected = nameUserSelected;
-	}
-
-	public Usuario getUsuarioSelecionado() {
-		return usuarioSelecionado;
-	}
-
-	public void setUsuarioSelecionado(Usuario usuarioSelecionado) {
-		System.out.println();
-		System.out.println("tipo de object: "+usuarioSelecionado);
-		//this.usuarioSelecionado = usuarioSelecionado;
+	public void setSelectedUser(String selectedUser) {
+		this.selectedUser = selectedUser;
 	}
 
 }
