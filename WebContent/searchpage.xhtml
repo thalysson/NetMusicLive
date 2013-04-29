@@ -21,36 +21,21 @@
 			<h:form id="form">
 
 				<h2>Resultados de Pesquisa</h2>
-
-				<p:dataTable id="table" value="#{homeBean.searchResults}" var="id"
-				selectionMode="single" selection="#{homeBean.selectedUser}"
-				 rowKey="#{id}">
-				 
-				 <p:column>
-				 <h:outputText value="#{id}"/>
-				 </p:column>
-
-					<f:facet name="footer">
-						<p:commandLink value="Carregar Usuario Selecionado" update=":form:carDetail"
-							oncomplete="carDialog.show()"/>
-					</f:facet>
+				
+				<p:dataTable id="searchResults" var="user" value="#{homeBean.searchResults}"
+					emptyMessage="Nenhum usuario encontrado" rows="10">
+					<p:column width="200" resizable="false">
+						<p:commandLink value="#{user}" />
+					</p:column>
+					<p:column resizable="false" width="50">
+						<p:commandButton action="#{homeBean.addUsuarioPerfil(user)}"
+							update="searchResults" id="favoritar" icon="ui-icon-person"
+							title="Ver perfil" style="font-size:11px" />
+						<p:growl id="growl" showDetail="true" sticky="true" />
+					</p:column>
 				</p:dataTable>
 
-				<p:dialog header="Som selecionado" showEffect="fade"
-					hideEffect="fade" modal="true" widgetVar="carDialog">
-
-					<p:outputPanel id="carDetail" style="text-align:center;"
-						layout="block">
-
-						<h:panelGrid columns="1">
-							<h:outputText id="color"
-								value="texto: #{homeBean.selectedUser}" />
-						</h:panelGrid>
-					</p:outputPanel>
-
-				</p:dialog>
-
-
+				<p:growl id="growl" showDetail="true" sticky="true" />
 			</h:form>
 		</div>
 

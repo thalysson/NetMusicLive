@@ -13,7 +13,7 @@ public abstract class Utilitario {
 	 * @return true se elemento nao for null ou vazio, false caso contrario.
 	 */
 	public static boolean elementIsValid(String element) {
-		if (element == null || element.isEmpty()) {
+		if (element == null || element.trim().isEmpty()) {
 			return false;
 		}
 		return true;

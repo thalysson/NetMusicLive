@@ -13,6 +13,8 @@ public class GerenciaSessao {
 	/* Mapa com sessaoID e login */
 	private Map<String, String> sessoes;
 
+	private String sessaoAtual;
+	
 	public GerenciaSessao() {
 		this.sessoes = new HashMap<String, String>();
 	}
@@ -25,6 +27,7 @@ public class GerenciaSessao {
 	 */
 	public void encerrarSessao(String login) {
 		this.sessoes.remove(login);
+		this.sessaoAtual = null;
 	}
 
 	/**
@@ -40,6 +43,7 @@ public class GerenciaSessao {
 		String id = "sessao" + login;
 		if (!existeSessao(id)) {
 			this.sessoes.put(id, login);
+			this.sessaoAtual = login;
 			return id;
 		}
 		return null;
@@ -54,7 +58,7 @@ public class GerenciaSessao {
 	 * @return Login do usuario.
 	 * @throws Exception
 	 */
-	public String getLogin(String idSessao) throws Exception {
+	public String getLogin(String idSessao) {
 		verificaSessao(idSessao);
 		return this.sessoes.get(idSessao);
 	}
@@ -78,12 +82,20 @@ public class GerenciaSessao {
 	 * @throws Exception
 	 *             {@link SessaoInvalidaException, SessaoInexistenteException}
 	 */
-	public void verificaSessao(String idSessao) throws Exception {
+	public void verificaSessao(String idSessao) {
 		if (!Utilitario.elementIsValid(idSessao)) {
-			throw new IllegalArgumentException("Sessão inválida");
+			throw new IllegalArgumentException("Sessao invalida");
 
 		} else if (!existeSessao(idSessao)) {
-			throw new RuntimeException("Sessão inexistente");
+			throw new RuntimeException("Sessao inexistente");
 		}
+	}
+
+	public String getSessaoAtual() {
+		return sessaoAtual;
+	}
+
+	public void setSessaoAtual(String sessaoAtual) {
+		this.sessaoAtual = sessaoAtual;
 	}
 }

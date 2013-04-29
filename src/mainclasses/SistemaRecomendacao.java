@@ -11,7 +11,7 @@ import com.google.common.collect.Sets;
  * 
  * Regras da recomendacao: O sistema recomenda fontes de sons ao usuario, de
  * acordo com quantidade de sons favoritados em comum + quantidade de fontes de
- * som em comum. As fontes recomendadas nao devem estar entre as fontes j�
+ * som em comum. As fontes recomendadas nao devem estar entre as fontes ja
  * existentes. Caso o primeiro criterio resulte em empate se coloca na frente a
  * fonte que seja mais favoritado pelo usuario. Caso o empate persista, deve se
  * colocar em ordem alfabetica segundo o nome do usuario. Caso o usuario nao
@@ -102,7 +102,7 @@ public class SistemaRecomendacao {
 				continue;
 			}
 
-			// N�o recomendar usuarios que ja sao fontes de sons
+			// Nao recomendar usuarios que ja sao fontes de sons
 			if (!this.usuario.getFontesDeSom().contains(u)) {
 				this.usuariosRecomendados.add(u);
 			}

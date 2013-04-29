@@ -2,6 +2,7 @@ package mainclasses;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import tiposordenacao.OrdenaFeedPrincipal;
@@ -62,29 +63,33 @@ public class NetMusicLive implements Serializable {
 	 * @param email
 	 *            Email do usuario.
 	 * @throws Exception
-	 *             Login, nome ou email inválidos (ou seja null ou ""). Login ou
+	 *             Login, nome ou email invalidos (ou seja null ou ""). Login ou
 	 *             email ja existente.
 	 */
 	public void criarUsuario(String login, String senha, String nome,
 			String email) {
 		if (!Utilitario.elementIsValid(login)) {
-			throw new IllegalArgumentException("Login inválido");
+			throw new IllegalArgumentException("Login invalido");
 
 		} else if (!Utilitario.elementIsValid(nome)) {
-			throw new IllegalArgumentException("Nome inválido");
+			throw new IllegalArgumentException("Nome invalido");
 
 		} else if (!Utilitario.elementIsValid(email)) {
-			throw new IllegalArgumentException("Email inválido");
+			throw new IllegalArgumentException("Email invalido");
 
 		} else {
 			if (gerenciador.existeLoginUsuario(login)) {
-				throw new IllegalArgumentException("Já existe um usuário com este login");
+				throw new IllegalArgumentException("Ja existe um usuario com este login");
 			}
 			if (gerenciador.existeEmailUsuario(email)) {
-				throw new IllegalArgumentException("Já existe um usuário com este email");
+				throw new IllegalArgumentException("Ja existe um usuario com este email");
 			}
 			gerenciador.criarUsuario(login, senha, nome, email);
 		}
+	}
+	
+	public String recuperaSessaoAtual() {
+		return gerenciaSessao.getSessaoAtual();
 	}
 
 	/**
@@ -118,17 +123,17 @@ public class NetMusicLive implements Serializable {
 	 */
 	public String abrirSessao(String login, String senha) {
 		if (!Utilitario.elementIsValid(login)) {
-			throw new IllegalArgumentException("Login inválido");
+			throw new IllegalArgumentException("Login invalido");
 
 		} else if (gerenciador.existeLoginUsuario(login)) {
 
 			if (!verificaLoginESenha(login, senha)) {
-				throw new IllegalArgumentException("Login inválido");
+				throw new IllegalArgumentException("Login invalido");
 			}
 			return gerenciaSessao.abrirSessao(login, senha);
 
 		} else {
-			throw new RuntimeException("Usuário inexistente");
+			throw new RuntimeException("Usuario inexistente");
 		}
 	}
 
@@ -406,12 +411,11 @@ public class NetMusicLive implements Serializable {
 	 *             ID do som invalido ou inexistente. Sessao inexitente ou
 	 *             invalida.
 	 */
-	public void favoritarSom(String idSessao, String idSom) throws Exception {
+	public void favoritarSom(String login, String idSom) {
 		if (!Utilitario.elementIsValid(idSom)) {
-			throw new IllegalArgumentException("Som inválido");
+			throw new IllegalArgumentException("Som invalido");
 		}
-
-		if (!gerenciador.favoritarSom(gerenciaSessao.getLogin(idSessao), idSom)) {
+		if (!gerenciador.favoritarSom(login, idSom)) {
 			throw new RuntimeException("Som inexistente");
 		}
 	}
@@ -430,7 +434,7 @@ public class NetMusicLive implements Serializable {
 	public void setMainFeedRule(String idsessao, String rule) throws Exception {
 		gerenciaSessao.verificaSessao(idsessao);
 		if (!Utilitario.elementIsValid(rule)) {
-			throw new IllegalArgumentException("Regra de composição inválida");
+			throw new IllegalArgumentException("Regra de composicaoo invalida");
 		}
 
 		if (rule.equals(TipoFeedPrincipal.SONS_RECENTES.toString())) {
@@ -445,7 +449,7 @@ public class NetMusicLive implements Serializable {
 			feedPrincipal = new SonsMaisFavoritadosUsuario();
 
 		} else {
-			throw new RuntimeException("Regra de composição inexistente");
+			throw new RuntimeException("Regra de composicao inexistente");
 		}
 	}
 
@@ -475,19 +479,19 @@ public class NetMusicLive implements Serializable {
 	 *            Nome da lista a ser criada.
 	 * @return ID da lista criada.
 	 * @throws Exception
-	 *             Sessao invalida ou inexistente. Nome invalido ou já
+	 *             Sessao invalida ou inexistente. Nome invalido ou ja
 	 *             existente.
 	 */
 	public String criarLista(String idSessao, String nomeLista)
 			throws Exception {
 		String login = gerenciaSessao.getLogin(idSessao);
 		if (!Utilitario.elementIsValid(nomeLista)) {
-			throw new Exception("Nome inválido");
+			throw new Exception("Nome invalido");
 		}
 		String idLista = gerenciador.criarLista(login, nomeLista);
 
 		if (!Utilitario.elementIsValid(idLista)) {
-			throw new Exception("Nome já escolhido");
+			throw new Exception("Nome ja escolhido");
 		}
 		return idLista;
 	}
@@ -501,10 +505,10 @@ public class NetMusicLive implements Serializable {
 	 * @param idLista
 	 *            ID da lista.
 	 * @param idUsuario
-	 *            ID do usuario que será adicionado.
+	 *            ID do usuario que sera adicionado.
 	 * @throws Exception
 	 *             Sessao inexistente ou invalida. Usuario invalido ou ja
-	 *             existente. Lista invalida. Usuario náo pode adicionar-se a
+	 *             existente. Lista invalida. Usuario nao pode adicionar-se a
 	 *             propria lista.
 	 */
 	public void adicionarUsuario(String idSessao, String idLista,
@@ -529,7 +533,7 @@ public class NetMusicLive implements Serializable {
 		List<Som> sons = gerenciador.getSonsEmLista(
 				gerenciaSessao.getLogin(idSessao), idLista);
 		if (sons == null) {
-			throw new Exception("Lista inválida");
+			throw new Exception("Lista invalida");
 		}
 		return sons;
 	}
@@ -553,5 +557,13 @@ public class NetMusicLive implements Serializable {
 	
 	public void reiniciarSistema(){
 		
+	}
+
+	public void adicionaUsuarioPerfil(String login) {
+		this.gerenciador.adicionaUsuarioPerfil(login);
+	}
+
+	public HashSet<Som> sonsFavoritados(String usuarioAtual) {
+		return gerenciador.sonsFavoritados(usuarioAtual);
 	}
 }

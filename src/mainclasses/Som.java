@@ -1,5 +1,7 @@
 package mainclasses;
 
+import util.Mensagens;
+
 import com.google.common.base.Objects;
 
 /**
@@ -25,6 +27,7 @@ public class Som {
 	 * Incrementa em 1 o numero de usuarios que favoritaram o som.
 	 */
 	public void incrementaFavoritos(){
+		Mensagens.addMsgSucesso("Som favoritado com sucesso!");
 		this.numeroDeFavotiros++;
 	}
 

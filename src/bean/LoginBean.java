@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import util.Menssagens;
+import util.Mensagens;
 
 @ManagedBean
 @ViewScoped
@@ -28,7 +28,7 @@ public class LoginBean extends DefaultBean implements Serializable{
 				putInSession("idsessao", idsessao);
 				return "homepage?faces-redirect=true";
 		} catch (RuntimeException e) {
-			Menssagens.addMsgErro(e.getMessage());
+			Mensagens.addMsgErro(e.getMessage());
 		}
 		return "";
 	}

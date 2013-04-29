@@ -1,16 +1,17 @@
 package bean;
 
+import java.util.HashSet;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import mainclasses.Som;
-import util.Menssagens;
+import util.Mensagens;
 
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class HomeBean extends DefaultBean {
 
 	private String mensagemDePostagem, idsessao, fotoUser;
@@ -25,7 +26,7 @@ public class HomeBean extends DefaultBean {
 	public HomeBean() {
 		super();
 		setIDSession();
-		setMensagemDePostagem("Postagem de Mensagem..");
+		setMensagemDePostagem("Postagem de Mensagem...");
 	}
 
 	public String search() {
@@ -49,7 +50,7 @@ public class HomeBean extends DefaultBean {
 				mensagemDePostagem);
 		apagarMensagemDePostagem();
 		if (!result) {
-			Menssagens.addMsgErro("Postagem De Som Invalida");
+			Mensagens.addMsgErro("Postagem De Som Invalida");
 		}
 	}
 
@@ -64,9 +65,29 @@ public class HomeBean extends DefaultBean {
 	public void apagarMensagemDePostagem() {
 		setMensagemDePostagem("");
 	}
+	
+	public void favoritarSom(Som som) {
+		interfaceWebAdapter.favoritarSom(getUsuarioAtual(), som.getId());
+	}
+	
+	public String sonsFavoritos() {
+		
+		return "sonsfavoritos?faces-redirect=true";
+	}
+	
+	public HashSet<Som> sonsFavoritados() {
+		return interfaceWebAdapter.sonsFavoritados(getUsuarioAtual());
+	}
 
+	/**
+	 * Adiciona o usuário que será exibido o perfil no Sistema.
+	 */
+	public String addUsuarioPerfil(String login) {
+		this.interfaceWebAdapter.adicionaUsuarioPerfil(login);
+		return "usuariopage?faces-redirect=true";
+	}
+	
 	// Metodos Set's e Get's dos campos da classe.
-
 
 	public String getFotoUser() {
 		setFotoUser(caminhoFotoPadrao);
@@ -116,5 +137,8 @@ public class HomeBean extends DefaultBean {
 	public void setSelectedUser(String selectedUser) {
 		this.selectedUser = selectedUser;
 	}
-
+	
+	private String getUsuarioAtual() {
+		return interfaceWebAdapter.recuperaSessaoAtual();
+	}
 }

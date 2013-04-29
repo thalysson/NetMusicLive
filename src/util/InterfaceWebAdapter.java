@@ -3,6 +3,7 @@ package util;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import mainclasses.NetMusicLive;
@@ -28,6 +29,10 @@ public class InterfaceWebAdapter{
 	public void criaUsuario(String login,String senha,String nome,String email) {
 		this.netMusicLive.criarUsuario(login, senha, nome, email);
 	}
+	
+	public void adicionaUsuarioPerfil(String login) {
+		this.netMusicLive.adicionaUsuarioPerfil(login);
+	}
 
 	public boolean existeSessao(String login){
 		return this.netMusicLive.existeSessao(login);
@@ -40,12 +45,20 @@ public class InterfaceWebAdapter{
 	public String abrirSessao(String login, String password) {
 		return this.netMusicLive.abrirSessao(login, password);
 	}
+	
+	public String recuperaSessaoAtual() {
+		return netMusicLive.recuperaSessaoAtual();
+	}
+	
+	public void favoritarSom(String login, String idSom) {
+		netMusicLive.favoritarSom(login, idSom);
+	}
 
 	public List<Som> getMainFeed(String idsessao) {
 		try {
 			return this.netMusicLive.getMainFeedComSonsDoUser(idsessao);			
 		} catch (Exception e) {
-			Menssagens.addMsgErro("erro InterfaceWebAdapter");
+			Mensagens.addMsgErro("erro InterfaceWebAdapter");
 			return null;
 		}
 	}
@@ -85,5 +98,9 @@ public class InterfaceWebAdapter{
 
 	public String getNomeUser(String idUser) {
 		return this.netMusicLive.getUsuario(idUser, "id").getNome(); 
+	}
+
+	public HashSet<Som> sonsFavoritados(String usuarioAtual) {
+		return netMusicLive.sonsFavoritados(usuarioAtual);
 	}	
 }

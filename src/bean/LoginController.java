@@ -3,13 +3,14 @@ package bean;
 import java.net.URLEncoder;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 
 import mainclasses.FacebookClient;
 import mainclasses.UsuarioFB;
 
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class LoginController {
 
     private String login;

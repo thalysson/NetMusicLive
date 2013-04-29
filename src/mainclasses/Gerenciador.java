@@ -2,6 +2,7 @@ package mainclasses;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +16,13 @@ public class Gerenciador {
 
 	private List<Usuario> usuarios;
 	private Map<String, Som> sons;
+	private Usuario usuarioPerfil;
+	private Map<Usuario, HashSet<Som>> sonsFavoritos;
 
 	public Gerenciador() {
 		this.usuarios = new ArrayList<Usuario>();
 		this.sons = new HashMap<String, Som>();
+		this.sonsFavoritos = new HashMap<Usuario, HashSet<Som>>();
 	}
 
 	public void criarUsuario(String login, String senha, String nome,
@@ -90,10 +94,21 @@ public class Gerenciador {
 		if (som == null) {
 			return false;
 		}
+		if(!this.getSonsFavoritos().containsKey(usuario)) {
+			HashSet<Som> sonsFavoritados = new HashSet<Som>();
+			sonsFavoritados.add(som);
+			
+			getSonsFavoritos().put(usuario, sonsFavoritados);
+		}
 		usuario.addSonsFavoritos(som);
 		som.incrementaFavoritos();
 		addEmFeedExtra(usuario, som);
 		return true;
+	}
+	
+	public HashSet<Som> sonsFavoritados(String login) {
+		Usuario usuario = getUsuario(login, "login");
+		return this.sonsFavoritos.get(usuario);
 	}
 
 	public String getAtributoSom(String idSom, String atributo) {
@@ -147,16 +162,16 @@ public class Gerenciador {
 		Usuario usuario2 = getUsuario(idUsuario, "id");
 
 		if (usuario1 == null || usuario2 == null) {
-			throw new Exception("Usuário inválido");
+			throw new Exception("Usuario invalido");
 		}
 		if (!(Utilitario.elementIsValid(idLista))) {
-			throw new Exception("Lista inválida");
+			throw new Exception("Lista invalida");
 		}
 		if (usuario1.equals(usuario2)) {
-			throw new Exception("Usuário não pode adicionar-se a própria lista");
+			throw new Exception("Usuario nao pode adicionar-se a propria lista");
 		}
 		if (!usuario1.addUsuarioListaCustomizada(idLista, usuario2)) {
-			throw new Exception("Usuário já existe nesta lista");
+			throw new Exception("Usuario ja existe nesta lista");
 		}
 		return true;
 	}
@@ -164,7 +179,19 @@ public class Gerenciador {
 	public List<Som> getSonsEmLista(String login, String idLista) {
 		return getUsuario(login, "login").getSonsEmLista(idLista);
 	}
+	
+	public Usuario getUsuarioPerfil() {
+		return usuarioPerfil;
+	}
 
+	public void setUsuarioPerfil(Usuario usuarioPerfil) {
+		this.usuarioPerfil = usuarioPerfil;
+	}
+
+	public void adicionaUsuarioPerfil(String login) {
+		this.setUsuarioPerfil(getUsuario(login, "login"));
+	}
+	
 	/**
 	 * Adiciona o som favoritado pelo usuario seguido ao feed extra do usuarios
 	 * seguidores.
@@ -225,7 +252,7 @@ public class Gerenciador {
 	 *            Valor do login ou id do usuario.
 	 * @param loginOuId
 	 *            Tipo "login" ou "id".
-	 * @return Usuario correspondete. null caso não haja.
+	 * @return Usuario correspondete. null caso nao haja.
 	 */
 	public Usuario getUsuario(String valorLoginOuId, String loginOuId) {
 		for (int i = 0; i < usuarios.size(); i++) {
@@ -289,7 +316,7 @@ public class Gerenciador {
 
 	public int getNumFontesEmComum(String login, String idUsuario) throws Exception {
 		if (!Utilitario.elementIsValid(idUsuario)) {
-			throw new Exception("Usuário inválido");
+			throw new Exception("Usuario invalido");
 		}
 		return new SistemaRecomendacao(this.usuarios,
 				getUsuario(login, "login")).getNumFontesEmComum(getUsuario(
@@ -298,7 +325,7 @@ public class Gerenciador {
 
 	public int getNumFavoritosEmComum(String login, String idUsuario) throws Exception {
 		if (!Utilitario.elementIsValid(idUsuario)) {
-			throw new Exception("Usuário inválido");
+			throw new Exception("Usuario invalido");
 		}
 		return new SistemaRecomendacao(this.usuarios,
 				getUsuario(login, "login")).getNumFavoritosEmComum(getUsuario(
@@ -317,9 +344,17 @@ public class Gerenciador {
 		for (int i = 0; i < sizeList; i++) {
 			String nomeUsuario = usuarios.get(i).getNome();
 			if (nomeUsuario.contains(textSearch)) {
-				result.add(usuarios.get(i).getId());
+				result.add(usuarios.get(i).getLogin());
 			}
 		}
 		return result;
+	}
+
+	public Map<Usuario, HashSet<Som>> getSonsFavoritos() {
+		return sonsFavoritos;
+	}
+
+	public void setSonsFavoritos(Map<Usuario, HashSet<Som>> sonsFavoritos) {
+		this.sonsFavoritos = sonsFavoritos;
 	}
 }

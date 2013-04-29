@@ -1,7 +1,7 @@
 package mainclasses;
 
 import util.InterfaceWebAdapter;
-import util.Menssagens;
+import util.Mensagens;
 
 import bean.DefaultBean;
 
@@ -26,7 +26,7 @@ public class UsuarioService extends DefaultBean {
 				putInSession("idsessao", idsessao);
 			}
 		} catch (Exception ex) {
-			Menssagens.addMsgErro(ex.getMessage());
+			Mensagens.addMsgErro(ex.getMessage());
 		}
 	}
 }
