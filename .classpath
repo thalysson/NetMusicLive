@@ -14,5 +14,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/easyaccept.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/cdi-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Thalysson/workspace/Tomcat/apache-tomcat-7.0.39-windows-x64/apache-tomcat-7.0.39/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
