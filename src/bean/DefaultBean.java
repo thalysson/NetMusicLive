@@ -2,15 +2,15 @@ package bean;
 
 import javax.faces.context.FacesContext;
 
-import util.InterfaceWebAdapter;
+import util.InterfaceWebFacade;
 
 public class DefaultBean {
 
-	protected InterfaceWebAdapter interfaceWebAdapter;
+	protected InterfaceWebFacade interfaceWebAdapter;
 	protected String login,senha;
 
 	public DefaultBean(){
-		interfaceWebAdapter = InterfaceWebAdapter.getInstance();
+		interfaceWebAdapter = InterfaceWebFacade.getInstance();
 	}
 
 	protected void putInSession(String key, Object value) {

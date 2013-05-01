@@ -1,4 +1,4 @@
-package mainclasses;
+package fb;
 
 public class FacebookClient {
 

@@ -1,7 +1,8 @@
-package mainclasses;
+package fb;
 
-import util.InterfaceWebAdapter;
+import util.InterfaceWebFacade;
 import util.Mensagens;
+
 
 import bean.DefaultBean;
 
@@ -10,7 +11,7 @@ import com.restfb.FacebookClient;
 
 public class UsuarioService extends DefaultBean {
 
-	protected InterfaceWebAdapter interfaceWebAdapter;
+	protected InterfaceWebFacade interfaceWebAdapter;
 
 	public void authFacebookLogin(String accessToken, int expires) {
 		try {

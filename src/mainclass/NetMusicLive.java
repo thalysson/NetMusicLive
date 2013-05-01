@@ -1,10 +1,16 @@
-package mainclasses;
+package mainclass;
+
+import gerenciador.GerenciaSessao;
+import gerenciador.Gerenciador;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import model.Som;
+import model.Tag;
+import model.Usuario;
 import tiposordenacao.OrdenaFeedPrincipal;
 import tiposordenacao.SonsMaisFavoritadosSistema;
 import tiposordenacao.SonsMaisFavoritadosUsuario;
@@ -47,7 +53,7 @@ public class NetMusicLive implements Serializable {
 	 */
 	public void zerarSistema() {
 		gerenciaSessao = new GerenciaSessao();
-		gerenciador = new Gerenciador();
+		gerenciador = Gerenciador.getInstance();
 		feedPrincipal = new SonsMaisRecentes();
 	}
 
@@ -69,20 +75,20 @@ public class NetMusicLive implements Serializable {
 	public void criarUsuario(String login, String senha, String nome,
 			String email) {
 		if (!Utilitario.elementIsValid(login)) {
-			throw new IllegalArgumentException("Login invalido");
+			throw new IllegalArgumentException("Login inv·lido");
 
 		} else if (!Utilitario.elementIsValid(nome)) {
-			throw new IllegalArgumentException("Nome invalido");
+			throw new IllegalArgumentException("Nome inv·lido");
 
 		} else if (!Utilitario.elementIsValid(email)) {
-			throw new IllegalArgumentException("Email invalido");
+			throw new IllegalArgumentException("Email inv·lido");
 
 		} else {
 			if (gerenciador.existeLoginUsuario(login)) {
-				throw new IllegalArgumentException("Ja existe um usuario com este login");
+				throw new IllegalArgumentException("J· existe um usu·rio com este login");
 			}
 			if (gerenciador.existeEmailUsuario(email)) {
-				throw new IllegalArgumentException("Ja existe um usuario com este email");
+				throw new IllegalArgumentException("J· existe um usu·rio com este email");
 			}
 			gerenciador.criarUsuario(login, senha, nome, email);
 		}
@@ -123,17 +129,16 @@ public class NetMusicLive implements Serializable {
 	 */
 	public String abrirSessao(String login, String senha) {
 		if (!Utilitario.elementIsValid(login)) {
-			throw new IllegalArgumentException("Login invalido");
+			throw new IllegalArgumentException("Login inv·lido");
 
 		} else if (gerenciador.existeLoginUsuario(login)) {
-
 			if (!verificaLoginESenha(login, senha)) {
-				throw new IllegalArgumentException("Login invalido");
+				throw new IllegalArgumentException("Login inv·lido");
 			}
 			return gerenciaSessao.abrirSessao(login, senha);
 
 		} else {
-			throw new RuntimeException("Usuario inexistente");
+			throw new RuntimeException("Usu·rio inexistente");
 		}
 	}
 
@@ -164,13 +169,13 @@ public class NetMusicLive implements Serializable {
 	public String getAtributoUsuario(String login, String atributo)
 			throws Exception {
 		if (!Utilitario.elementIsValid(atributo)) {
-			throw new IllegalArgumentException("Atributo inv√°lido");
+			throw new IllegalArgumentException("Atributo inv·lido");
 
 		} else if (!Utilitario.elementIsValid(login)) {
-			throw new IllegalArgumentException("Login inv√°lido");
+			throw new IllegalArgumentException("Login inv·lido");
 
 		} else if (!this.gerenciador.existeLoginUsuario(login)) {
-			throw new IllegalArgumentException("Usu√°rio inexistente");
+			throw new IllegalArgumentException("Usu·rio inexistente");
 
 		} else {
 			String result = this.gerenciador
@@ -212,10 +217,10 @@ public class NetMusicLive implements Serializable {
 	public String postarSom(String idSessao, String link, String dataCriacao)
 			throws Exception {
 		if (!Utilitario.elementIsValid(link)) {
-			throw new IllegalArgumentException("Som inv√°lido");
+			throw new IllegalArgumentException("Som inv·lido");
 
 		} else if (!Utilitario.dataIsValida(dataCriacao)) {
-			throw new IllegalArgumentException("Data de Cria√ß√£o inv√°lida");
+			throw new IllegalArgumentException("Data de CriaÁ„o inv·lida");
 		}
 
 		return gerenciador.postarSom(gerenciaSessao.getLogin(idSessao), link,
@@ -237,9 +242,9 @@ public class NetMusicLive implements Serializable {
 	public String getAtributoSom(String idSom, String atributo)
 			throws Exception {
 		if (!Utilitario.elementIsValid(idSom)) {
-			throw new IllegalArgumentException("Som inv√°lido");
+			throw new IllegalArgumentException("Som inv·lido");
 		} else if (!Utilitario.elementIsValid(atributo)) {
-			throw new IllegalArgumentException("Atributo inv√°lido");
+			throw new IllegalArgumentException("Atributo inv·lido");
 		}
 
 		String valorAtributo = gerenciador.getAtributoSom(idSom, atributo);
@@ -265,10 +270,10 @@ public class NetMusicLive implements Serializable {
 		String loginSeguidor = gerenciaSessao.getLogin(idSessaoSeguidor);
 
 		if (!Utilitario.elementIsValid(loginSeguido)) {
-			throw new IllegalArgumentException("Login inv√°lido");
+			throw new IllegalArgumentException("Login inv·lido");
 
 		} else if (loginSeguidor.equals(loginSeguido)) {
-			throw new IllegalArgumentException("Login inv√°lido");
+			throw new IllegalArgumentException("Login inv·lido");
 		}
 
 		if (gerenciador.existeLoginUsuario(loginSeguido)) {
@@ -411,11 +416,12 @@ public class NetMusicLive implements Serializable {
 	 *             ID do som invalido ou inexistente. Sessao inexitente ou
 	 *             invalida.
 	 */
-	public void favoritarSom(String login, String idSom) {
+	public void favoritarSom(String idSessao, String idSom) {
 		if (!Utilitario.elementIsValid(idSom)) {
-			throw new IllegalArgumentException("Som invalido");
+			throw new IllegalArgumentException("Som inv·lido");
 		}
-		if (!gerenciador.favoritarSom(login, idSom)) {
+		if (!gerenciador.favoritarSom(
+				gerenciaSessao.getLogin(idSessao), idSom)) {
 			throw new RuntimeException("Som inexistente");
 		}
 	}
@@ -434,7 +440,7 @@ public class NetMusicLive implements Serializable {
 	public void setMainFeedRule(String idsessao, String rule) throws Exception {
 		gerenciaSessao.verificaSessao(idsessao);
 		if (!Utilitario.elementIsValid(rule)) {
-			throw new IllegalArgumentException("Regra de composicaoo invalida");
+			throw new IllegalArgumentException("Regra de composiÁ„o inv·lida");
 		}
 
 		if (rule.equals(TipoFeedPrincipal.SONS_RECENTES.toString())) {
@@ -449,7 +455,7 @@ public class NetMusicLive implements Serializable {
 			feedPrincipal = new SonsMaisFavoritadosUsuario();
 
 		} else {
-			throw new RuntimeException("Regra de composicao inexistente");
+			throw new RuntimeException("Regra de composiÁ„o inexistente");
 		}
 	}
 
@@ -460,14 +466,19 @@ public class NetMusicLive implements Serializable {
 	 *            Login do usuario que ter√° a sessao encerrada.
 	 */
 	public void encerrarSessao(String login) {
-		gerenciaSessao.encerrarSessao("sessao" + login);
+		gerenciaSessao.encerrarSessao(login);
 	}
 
 	/**
 	 * Encerra o sistema.
 	 */
 	public void encerrarSistema() {
-
+		gerenciaSessao = null;
+		gerenciador.reiniciar();
+		gerenciador = null;
+		feedPrincipal = null;
+	 	netMusicLive = null;
+		
 	}
 
 	/**
@@ -486,12 +497,12 @@ public class NetMusicLive implements Serializable {
 			throws Exception {
 		String login = gerenciaSessao.getLogin(idSessao);
 		if (!Utilitario.elementIsValid(nomeLista)) {
-			throw new Exception("Nome invalido");
+			throw new Exception("Nome inv·lido");
 		}
 		String idLista = gerenciador.criarLista(login, nomeLista);
 
 		if (!Utilitario.elementIsValid(idLista)) {
-			throw new Exception("Nome ja escolhido");
+			throw new Exception("Nome j· escolhido");
 		}
 		return idLista;
 	}
@@ -533,7 +544,7 @@ public class NetMusicLive implements Serializable {
 		List<Som> sons = gerenciador.getSonsEmLista(
 				gerenciaSessao.getLogin(idSessao), idLista);
 		if (sons == null) {
-			throw new Exception("Lista invalida");
+			throw new Exception("Lista inv·lida");
 		}
 		return sons;
 	}
@@ -556,7 +567,7 @@ public class NetMusicLive implements Serializable {
 	}
 	
 	public void reiniciarSistema(){
-		
+		netMusicLive = NetMusicLive.getInstance();
 	}
 
 	public void adicionaUsuarioPerfil(String login) {
@@ -565,5 +576,9 @@ public class NetMusicLive implements Serializable {
 
 	public HashSet<Som> sonsFavoritados(String usuarioAtual) {
 		return gerenciador.sonsFavoritados(usuarioAtual);
+	}
+	
+	public Tag criarTag(String sessaoSteve, String tag) {
+		return null;
 	}
 }

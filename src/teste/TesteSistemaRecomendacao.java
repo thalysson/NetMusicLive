@@ -1,15 +1,17 @@
 package teste;
 
+import gerenciador.Gerenciador;
+
 import java.util.List;
 
 import junit.framework.Assert;
 
-import mainclasses.Gerenciador;
-import mainclasses.SistemaRecomendacao;
-import mainclasses.Usuario;
+import model.Usuario;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import recomendacao.SistemaRecomendacao;
 
 /**
  * Teste da classe {@link SistemaRecomendacao}.
@@ -26,7 +28,7 @@ public class TesteSistemaRecomendacao {
 
 	@Before
 	public void setUp() {
-		gerenciador = new Gerenciador();
+		gerenciador = Gerenciador.getInstance();
 
 		antonio = new Usuario("antonio123", "1234", "Antonio Silva",
 				"antonio@email.com");

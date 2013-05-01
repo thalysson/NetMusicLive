@@ -1,28 +1,68 @@
-package mainclasses;
+package gerenciador;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import model.ListaCustomizada;
+import model.Som;
+import model.Usuario;
+
+import recomendacao.SistemaRecomendacao;
 
 import util.Utilitario;
+
+import com.google.common.collect.Lists;
 
 /**
  * Classe reponsavel pelo gerenciamento de {@link Usuario}, {@link Som} e suas
  * interacoes.
  */
-public class Gerenciador {
+public class Gerenciador implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	private static Gerenciador gerenciador;
+	private static Lock lock;
+	
 	private List<Usuario> usuarios;
 	private Map<String, Som> sons;
-	private Usuario usuarioPerfil;
 	private Map<Usuario, HashSet<Som>> sonsFavoritos;
+	private Usuario usuarioPerfil;
+	
 
-	public Gerenciador() {
+	private Gerenciador() {
 		this.usuarios = new ArrayList<Usuario>();
 		this.sons = new HashMap<String, Som>();
 		this.sonsFavoritos = new HashMap<Usuario, HashSet<Som>>();
+	}
+	
+	public static Gerenciador getInstance() {
+		if (lock == null) Gerenciador.lock = new ReentrantLock();
+		if (gerenciador == null) {
+			try {
+				gerenciador = recuperarDados();
+			} catch (IOException e) {
+				gerenciador = new Gerenciador();
+			}
+		}
+		return gerenciador;
+	}
+	
+	public static Lock getLock() {
+		return lock;
 	}
 
 	public void criarUsuario(String login, String senha, String nome,
@@ -94,18 +134,19 @@ public class Gerenciador {
 		if (som == null) {
 			return false;
 		}
-		if(!this.getSonsFavoritos().containsKey(usuario)) {
-			HashSet<Som> sonsFavoritados = new HashSet<Som>();
+		if (!this.getSonsFavoritos().containsKey(usuario)) {
+			LinkedHashSet<Som> sonsFavoritados = new LinkedHashSet<Som>();
 			sonsFavoritados.add(som);
-			
 			getSonsFavoritos().put(usuario, sonsFavoritados);
+		} else {
+			this.sonsFavoritos.get(usuario).add(som);
 		}
 		usuario.addSonsFavoritos(som);
 		som.incrementaFavoritos();
 		addEmFeedExtra(usuario, som);
 		return true;
 	}
-	
+
 	public HashSet<Som> sonsFavoritados(String login) {
 		Usuario usuario = getUsuario(login, "login");
 		return this.sonsFavoritos.get(usuario);
@@ -129,7 +170,6 @@ public class Gerenciador {
 		seguidor.addFontesDeSom(seguido);
 		seguido.addListaDeSeguidores(seguidor);
 		addVisaoDosSons(seguidor, seguido);
-
 	}
 
 	public List<Usuario> getListaSeguidoresUsuario(String login) {
@@ -145,7 +185,11 @@ public class Gerenciador {
 	}
 
 	public List<Som> getSonsFavoritosUsuario(String login) {
-		return getUsuario(login, "login").getSonsFavoritos();
+		HashSet<Som> favoritos = sonsFavoritos.get(getUsuario(login, "login"));
+		if (favoritos == null) {
+			return new ArrayList<Som>();
+		}
+		return Lists.newArrayList(favoritos.iterator());
 	}
 
 	public List<Som> getFeedExtraUsuario(String login) {
@@ -162,16 +206,16 @@ public class Gerenciador {
 		Usuario usuario2 = getUsuario(idUsuario, "id");
 
 		if (usuario1 == null || usuario2 == null) {
-			throw new Exception("Usuario invalido");
+			throw new Exception("Usuário inválido");
 		}
 		if (!(Utilitario.elementIsValid(idLista))) {
-			throw new Exception("Lista invalida");
+			throw new Exception("Lista inválida");
 		}
 		if (usuario1.equals(usuario2)) {
-			throw new Exception("Usuario nao pode adicionar-se a propria lista");
+			throw new Exception("Usuário não pode adicionar-se a própria lista");
 		}
 		if (!usuario1.addUsuarioListaCustomizada(idLista, usuario2)) {
-			throw new Exception("Usuario ja existe nesta lista");
+			throw new Exception("Usuário já existe nesta lista");
 		}
 		return true;
 	}
@@ -179,7 +223,7 @@ public class Gerenciador {
 	public List<Som> getSonsEmLista(String login, String idLista) {
 		return getUsuario(login, "login").getSonsEmLista(idLista);
 	}
-	
+
 	public Usuario getUsuarioPerfil() {
 		return usuarioPerfil;
 	}
@@ -191,7 +235,9 @@ public class Gerenciador {
 	public void adicionaUsuarioPerfil(String login) {
 		this.setUsuarioPerfil(getUsuario(login, "login"));
 	}
-	
+
+	// public Tag criarTag(String )
+
 	/**
 	 * Adiciona o som favoritado pelo usuario seguido ao feed extra do usuarios
 	 * seguidores.
@@ -314,28 +360,30 @@ public class Gerenciador {
 		return som;
 	}
 
-	public int getNumFontesEmComum(String login, String idUsuario) throws Exception {
+	public int getNumFontesEmComum(String login, String idUsuario)
+			throws Exception {
 		if (!Utilitario.elementIsValid(idUsuario)) {
-			throw new Exception("Usuario invalido");
+			throw new Exception("Usuário inválido");
 		}
 		return new SistemaRecomendacao(this.usuarios,
 				getUsuario(login, "login")).getNumFontesEmComum(getUsuario(
-						idUsuario, "id"));
+				idUsuario, "id"));
 	}
 
-	public int getNumFavoritosEmComum(String login, String idUsuario) throws Exception {
+	public int getNumFavoritosEmComum(String login, String idUsuario)
+			throws Exception {
 		if (!Utilitario.elementIsValid(idUsuario)) {
-			throw new Exception("Usuario invalido");
+			throw new Exception("Usuário inválido");
 		}
 		return new SistemaRecomendacao(this.usuarios,
 				getUsuario(login, "login")).getNumFavoritosEmComum(getUsuario(
-						idUsuario, "id"));
+				idUsuario, "id"));
 	}
 
 	public List<Usuario> getFontesDeSonsRecomendadas(String login) {
 		Usuario u = getUsuario(login, "login");
 		return new SistemaRecomendacao(this.usuarios, u)
-		.getUsuariosRecomendados();
+				.getUsuariosRecomendados();
 	}
 
 	public List<String> search(String textSearch) {
@@ -356,5 +404,51 @@ public class Gerenciador {
 
 	public void setSonsFavoritos(Map<Usuario, HashSet<Som>> sonsFavoritos) {
 		this.sonsFavoritos = sonsFavoritos;
+	}
+	
+	private static void persisteDados() throws IOException{
+		ObjectOutputStream out = null;
+		try{
+			out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("gerenciador.dat")));
+			out.writeObject(gerenciador);
+		}catch(IOException e){
+			System.err.println(e.getMessage());
+		}finally{
+			if (out!=null){
+				out.close();
+			}
+		}
+	}
+	
+	public static Gerenciador recuperarDados() throws IOException{
+		ObjectInputStream in = null;
+		try{
+			in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("gerenciador.dat")));
+			return (Gerenciador) in.readObject();
+		}catch(ClassNotFoundException e){
+			System.err.println(e.getMessage());
+		}finally{
+			if (in!=null){
+				in.close();
+			}
+		}
+		return null;
+	}
+	
+	public static void persistirDados() throws IOException {
+		lock.lock();
+		try {
+			persisteDados();
+		}
+		finally{
+			lock.unlock();
+		}
+	}
+
+	public void reiniciar() {
+		this.usuarios = new ArrayList<Usuario>();
+		this.sons = new HashMap<String, Som>();
+		this.sonsFavoritos = new HashMap<Usuario, HashSet<Som>>();
+		this.gerenciador = null;
 	}
 }

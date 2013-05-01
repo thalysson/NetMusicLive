@@ -6,8 +6,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 
-import mainclasses.FacebookClient;
-import mainclasses.UsuarioFB;
+import fb.FacebookClient;
+import fb.UsuarioFB;
+
+
 
 @ManagedBean
 @RequestScoped

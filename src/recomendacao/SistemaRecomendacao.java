@@ -1,7 +1,11 @@
-package mainclasses;
+package recomendacao;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+
+import model.Usuario;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -25,7 +29,7 @@ public class SistemaRecomendacao {
 	private Usuario usuario;
 	/* Os usuarios que serao recomendados */
 	private List<Usuario> usuariosRecomendados;
-
+	
 	public SistemaRecomendacao(List<Usuario> usuariosSistema, Usuario usuario) {
 		this.usuariosRecomendados = new ArrayList<Usuario>();
 		this.usuario = usuario;
@@ -199,7 +203,8 @@ public class SistemaRecomendacao {
 				Usuario usuarioSeguinte = this.usuariosRecomendados.get(i + 1);
 				// Afinidades iguais
 				if (getAfinidade(usuarioAtual) == getAfinidade(usuarioSeguinte)) {
-					// Receberam mesmo numero de favoritos do usuario da recomendacao
+					// Receberam mesmo numero de favoritos do usuario da
+					// recomendacao
 					if (qtdSonsFavoritados(usuarioAtual) == qtdSonsFavoritados(usuarioSeguinte)) {
 						// Coloca em ordem alfabetica
 						if (usuarioAtual.getNome().compareToIgnoreCase(
@@ -209,8 +214,10 @@ public class SistemaRecomendacao {
 							houveTroca = true;
 						}
 
-					} else { // NAO receberam a mesma quantidade de favoritos do usuario da recomendacao
-						// Coloca as quantidades de favoritos em ordem decrescente
+					} else { // NAO receberam a mesma quantidade de favoritos do
+								// usuario da recomendacao
+						// Coloca as quantidades de favoritos em ordem
+						// decrescente
 						if (qtdSonsFavoritados(usuarioAtual) < qtdSonsFavoritados(usuarioSeguinte)) {
 							this.usuariosRecomendados.set(1 + i, usuarioAtual);
 							this.usuariosRecomendados.set(i, usuarioSeguinte);

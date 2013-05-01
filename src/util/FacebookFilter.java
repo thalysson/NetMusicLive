@@ -8,8 +8,10 @@ import java.net.URL;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 
-import mainclasses.FacebookClient;
-import mainclasses.UsuarioService;
+import fb.FacebookClient;
+import fb.UsuarioService;
+
+
 
 public class FacebookFilter implements Filter {
 

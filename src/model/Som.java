@@ -1,4 +1,4 @@
-package mainclasses;
+package model;
 
 import util.Mensagens;
 
@@ -27,7 +27,6 @@ public class Som {
 	 * Incrementa em 1 o numero de usuarios que favoritaram o som.
 	 */
 	public void incrementaFavoritos(){
-		Mensagens.addMsgSucesso("Som favoritado com sucesso!");
 		this.numeroDeFavotiros++;
 	}
 

@@ -7,13 +7,13 @@
 # limpar os dados do sistema
 zerarSistema
 
-# entradas v√°lidas
+# entradas v·lidas
 
 criarUsuario login="mark" senha="m@rk" nome="Mark Zuckerberg" email="mark@facebook.com"
 criarUsuario login="steve" senha="5t3v3" nome="Steven Paul Jobs" email="jobs@apple.com"
 criarUsuario login="bill" senha="severino" nome="William Henry Gates III" email="billzin@msn.com"
 
-# o m√©todo 'abrirSessao' retorna o ID da sess√£o
+# o mÈtodo 'abrirSessao' retorna o ID da sess„o
 sessaoMark=abrirSessao login="mark" senha="m@rk"
 sessaoSteve=abrirSessao login="steve" senha="5t3v3"
 sessaoBill=abrirSessao login="bill" senha="severino"
@@ -135,7 +135,7 @@ reiniciarSistema
 
 # verificacao de informacoes do sistema
 
-# o m√©todo 'abrirSessao' retorna o ID da sess√£o
+# o mÈtodo 'abrirSessao' retorna o ID da sess„o
 sessaoMark=abrirSessao login="mark" senha="m@rk"
 sessaoSteve=abrirSessao login="steve" senha="5t3v3"
 sessaoBill=abrirSessao login="bill" senha="severino"

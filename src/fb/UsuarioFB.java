@@ -1,4 +1,4 @@
-package mainclasses;
+package fb;
 
 import com.restfb.Facebook;
 

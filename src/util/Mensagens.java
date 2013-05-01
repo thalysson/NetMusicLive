@@ -3,7 +3,7 @@ package util;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-public class Mensagens {
+public abstract class Mensagens {
 
 	/**
 	 * Adiciona uma mensagem de erro no contexto.

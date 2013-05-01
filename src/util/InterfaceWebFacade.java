@@ -6,22 +6,22 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import mainclasses.NetMusicLive;
-import mainclasses.Som;
-import mainclasses.Usuario;
+import mainclass.NetMusicLive;
+import model.Som;
+import model.Usuario;
 
-public class InterfaceWebAdapter{
+public class InterfaceWebFacade{
 	
 	private NetMusicLive netMusicLive;
-	public static InterfaceWebAdapter interfaceWebAdapter;
+	public static InterfaceWebFacade interfaceWebAdapter;
 	
-	private InterfaceWebAdapter(){
+	private InterfaceWebFacade(){
 		netMusicLive = NetMusicLive.getInstance();
 	}
 
-	public static InterfaceWebAdapter getInstance(){
+	public static InterfaceWebFacade getInstance(){
 		if(interfaceWebAdapter == null){
-			interfaceWebAdapter = new InterfaceWebAdapter();
+			interfaceWebAdapter = new InterfaceWebFacade();
 		}
 		return interfaceWebAdapter;
 	}

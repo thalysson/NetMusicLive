@@ -1,4 +1,4 @@
-package mainclasses;
+package gerenciador;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class GerenciaSessao {
 	 *            Login correspondente a sessao a ser excluida.
 	 */
 	public void encerrarSessao(String login) {
-		this.sessoes.remove(login);
+		this.sessoes.remove("sessao"+login);
 		this.sessaoAtual = null;
 	}
 
@@ -46,6 +46,7 @@ public class GerenciaSessao {
 			this.sessaoAtual = login;
 			return id;
 		}
+		System.out.println("já existeeee????");
 		return null;
 	}
 
@@ -84,10 +85,10 @@ public class GerenciaSessao {
 	 */
 	public void verificaSessao(String idSessao) {
 		if (!Utilitario.elementIsValid(idSessao)) {
-			throw new IllegalArgumentException("Sessao invalida");
+			throw new IllegalArgumentException("Sessão inválida");
 
 		} else if (!existeSessao(idSessao)) {
-			throw new RuntimeException("Sessao inexistente");
+			throw new RuntimeException("Sessão inexistente");
 		}
 	}
 

@@ -1,7 +1,7 @@
 package teste;
 
-import mainclasses.Som;
-import mainclasses.Usuario;
+import model.Som;
+import model.Usuario;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class TesteUsuario {
 		Assert.assertEquals(VAZIO, usuario1.getListaDeSeguidores().size());
 		Assert.assertEquals(VAZIO, usuario1.getVisaoDosSons().size());
 		Assert.assertEquals(VAZIO, usuario1.getNumeroDeSeguidores());
-		Assert.assertEquals(VAZIO, usuario1.getSonsFavoritos().size());
+	//	Assert.assertEquals(VAZIO, usuario1.getSonsFavoritos().size());
 
 	}
 
